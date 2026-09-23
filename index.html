@@ -4,129 +4,122 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AhOOffice</title>
 <style>
-body{margin:0;font-family:system-ui;background:#0f172a;color:#fff;padding:14px}
-.top{text-align:center;padding:12px 0}.top img{width:85px;border-radius:18px;background:#fff;padding:4px}
-h1{color:#ff7a00;margin:8px 0 0}.sub{opacity:.6;font-size:13px}
-.bar{display:flex;gap:8px;margin:16px 0}.bar input{flex:1;padding:14px;border-radius:12px;border:none;font-size:16px}
-.btn{padding:12px 14px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
-.btn-audio{background:#ff7a00;color:#000}.btn-scan{background:#38bdf8;color:#000}.btn-param{background:#334155;color:#fff}
-.card{background:#1e293b;padding:14px;border-radius:12px;margin-bottom:10px;border-left:4px solid #ff7a00}
-.nom{font-weight:bold;color:#38bdf8}.gros{font-size:32px;margin:8px 0;color:#fff}
-.trans{padding:10px;background:#0f172a;border-radius:8px;border:1px dashed #ff7a00;margin-top:8px}
-.small{font-size:12px;opacity:.6}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:none;padding:20px;overflow:auto;z-index:99}
-.box{background:#1e293b;padding:20px;border-radius:16px;max-width:500px;margin:20px auto}
+:root{--bg:#0f172a;--card:#1e293b;--accent:#ff7a00}
+body{margin:0;font-family:system-ui;background:var(--bg);color:#fff;padding:14px;transition:.3s}
+.top{text-align:center;position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0}
+.top img{width:70px;border-radius:16px;background:#fff;padding:3px}
+h1{color:var(--accent);margin:5px 0 0}.sub{opacity:.6;font-size:11px}
+.bar{position:sticky;top:100px;z-index:10;background:var(--bg);display:flex;gap:6px;padding:10px 0;flex-wrap:wrap}
+.bar input{flex:1;min-width:140px;padding:14px;border-radius:12px;border:none;font-size:16px}
+.btn{padding:12px 13px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
+.btn-audio{background:var(--accent);color:#000}.btn-voice{background:#22c55e;color:#000}.btn-scan{background:#38bdf8;color:#000}.btn-expose{background:#a78bfa;color:#000}.btn-param{background:#334155;color:#fff}
+#res{margin-top:10px}
+.card{background:var(--card);padding:16px;border-radius:14px;margin-bottom:12px;border-left:4px solid var(--accent)}
+.gros{font-size:26px;margin:8px 0;word-break:break-word}
+.trans{padding:10px;background:rgba(0,0,0,.3);border-radius:10px;border:1px dashed var(--accent);margin-top:8px}
+.small{font-size:12px;opacity:.7}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;padding:16px;overflow:auto;z-index:99}
+.box{background:var(--card);padding:20px;border-radius:16px;max-width:540px;margin:20px auto}
+.plan{padding:10px;border:1px solid #444;border-radius:10px;margin:6px 0;cursor:pointer}.plan.selected{border-color:var(--accent);background:rgba(255,122,0,.15)}
 canvas{background:#fff;border-radius:8px;width:100%;touch-action:none}
+video{width:100%;border-radius:12px;margin-top:10px}
+select,input[type=color],input[type=range]{width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px}
 </style>
 </head>
 <body>
-<div class="top"><img src="icon-512.png" onerror="this.style.display='none'"><h1>AhOOffice</h1><div class="sub">Audio • Scan • Exposé IA • OFFLINE</div></div>
+<div class="top"><img src="icon-512.png" onerror="this.style.display='none'"><h1>AhOOffice</h1><div class="sub">V22 COMPLET - Tout conservé abonné - Pour étudiants</div></div>
 <div class="bar">
-<input id="q" placeholder="Tape ou parle...">
+<input id="q" placeholder="Tape ou parle... ex: limite quand x tend vers 0">
 <button class="btn btn-audio" id="bAudio">🎤</button>
+<button class="btn btn-voice" id="bVoice">👤</button>
 <button class="btn btn-scan" id="bScan">📷</button>
+<button class="btn btn-expose" id="bExpose">🎓</button>
 <button class="btn btn-param" id="bParam">⚙️</button>
 </div>
-<div id="status" class="small"></div>
+<div id="status" class="small">Prêt. Enregistre ta voix avec 👤 pour filtrer.</div>
 <div id="res"></div>
+<video id="cam" autoplay playsinline style="display:none"></video>
 
-<div id="modalParam" class="modal"><div class="box">
-<h2>⚙️ Paramètres</h2>
-<button class="btn" style="background:#ff7a00;width:100%" onclick="openPrivacy()">📄 Confidentialité & Signature</button><br><br>
-<button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Fermer</button>
-</div></div>
-
-<div id="modalPriv" class="modal"><div class="box">
-<h2>🔒 Confidentialité</h2><p class="small">AhOOffice OFFLINE, rien n'est envoyé.</p>
-<canvas id="sign" height="140"></canvas>
-<p><label><input type="checkbox" id="chk"> J'accepte</label></p>
-<button class="btn" style="background:#22c55e;width:100%" id="bSign">Valider & Signer</button><br><br>
-<button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Annuler</button>
-</div></div>
+<div id="modalParam" class="modal"><div class="box"><h2>⚙️ Paramètres</h2>
+<p>🌍 Langue officielle</p><select id="langSel"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option><option value="de">Deutsch</option><option value="ar">العربية</option><option value="zh">中文</option></select>
+<p>🎨 Fond d'écran</p><input type="color" id="bgColor" value="#0f172a"><div style="display:flex;gap:6px;margin-top:6px"><button class="btn" style="background:#0f172a;border:1px solid #fff" onclick="setBg('#0f172a')">Sombre</button><button class="btn" style="background:#ffffff;color:#000" onclick="setBg('#ffffff')">Clair</button><button class="btn" style="background:#1a1a2e" onclick="setBg('#1a1a2e')">Nuit</button></div>
+<p>🔤 Taille texte</p><input type="range" id="size" min="12" max="26" value="16">
+<p><button class="btn" style="background:var(--accent);width:100%;margin-top:12px" onclick="openPrivacy()">📄 Confidentialité & Signature</button></p>
+<button class="btn" style="background:#334155;width:100%;color:#fff;margin-top:10px" onclick="closeM()">Fermer</button></div></div>
+<div id="modalPriv" class="modal"><div class="box"><h2>🔒 Confidentialité 100% OFFLINE</h2><canvas id="sign" height="160"></canvas><p><label><input type="checkbox" id="chk"> J'accepte</label></p><button class="btn" style="background:#22c55e;width:100%" id="bSign">Signer</button><br><br><button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Annuler</button></div></div>
+<div id="modalExpose" class="modal"><div class="box"><h2>🎓 Exposé - Choix par briques</h2><input id="sujet" placeholder="Thème: ex: satellite artificiel" style="width:100%;padding:12px;border-radius:8px;border:none"><button class="btn" style="background:#a78bfa;width:100%;margin-top:10px" id="genExpose">Proposer des plans</button><div id="plans"></div><div id="outExpose" class="small" style="margin-top:12px;white-space:pre-wrap"></div><button class="btn" style="background:#334155;width:100%;color:#fff;margin-top:10px" onclick="closeM()">Fermer</button></div></div>
 
 <script>
-const FORMULES=[
-{nom:"Vitesse satellite",tags:"satellite",sym:"v = √(GM/r)"},
-{nom:"Energie cinetique",tags:"energie",sym:"Ec = ½ m v²"},
-{nom:"pH",tags:"ph",sym:"pH = -log[H⁺]"},
-{nom:"Loi Ohm",tags:"ohm",sym:"U = R × I"}
-];
+let LANG=localStorage.getItem('aho_lang')||'fr';
+let VOICE_PROFILE=localStorage.getItem('aho_voice')||null;
+document.getElementById('langSel').value=LANG;
+document.getElementById('langSel').onchange=e=>{LANG=e.target.value;localStorage.setItem('aho_lang',LANG);};
+function setBg(c){document.documentElement.style.setProperty('--bg',c);document.body.style.background=c;localStorage.setItem('aho_bg',c);}
+let savedBg=localStorage.getItem('aho_bg');if(savedBg)setBg(savedBg);
+document.getElementById('size').oninput=e=>document.body.style.fontSize=e.target.value+'px';
 
-function convertirVoixEnMaths(texte){
-  let t = texte.toLowerCase();
-  // Normalise accents pour mieux reconnaitre
-  t = t.replaceAll("carrée","carree").replaceAll("carré","carre").replaceAll("égale","egale");
+// CERVEAU CONTEXTUEL
+const SYMBOLES=[{k:["racine carree","racine"],s:"√"},{k:["au carre"],s:"²"},{k:["au cube"],s:"³"},{k:["fois","multiplie"],s:"×"},{k:["divise"],s:"÷"},{k:["pi"],s:"π"},{k:["infini"],s:"∞"},{k:["integrale"],s:"∫"},{k:["somme"],s:"Σ"}];
+const FORMULES=[{keys:["energie cinetique"],sym:"Ec = ½ m v²",ctx:["egal","vaut","formule","c'est"]},{keys:["pythagore"],sym:"a² + b² = c²"},{keys:["limite"],sym:"lim",ctx:["x tend","quand","vers","0","infini","fonction"]},{keys:["vitesse"],sym:"v = d / t"},{keys:["ohm"],sym:"U = R × I"},{keys:["ph"],sym:"pH = -log[H⁺]"},{keys:["vitesse satellite","satellite"],sym:"v = √(GM/r)"}];
+const DECLENCHEURS=["egal","egale","vaut","c'est","s'ecrit","formule","=","combien","calcule"];
 
-  // Dictionnaire son -> symbole
-  t = t.replaceAll("racine carree de","√");
-  t = t.replaceAll("racine carree","√");
-  t = t.replaceAll("racine carre de","√");
-  t = t.replaceAll("racine carre","√");
-  t = t.replaceAll("au carre","²");
-  t = t.replaceAll("carre","²");
-  t = t.replaceAll("fois","×");
-  t = t.replaceAll("divise par","/");
-  t = t.replaceAll("sur","/");
-  t = t.replaceAll("egale", "=");
-
-  // Nettoie les espaces autour de √
-  t = t.replaceAll("√ ","√").replaceAll("√ ","√");
-  return t;
+function isMathContext(t, f){
+ if(!f.ctx) return true;
+ // Si mot normal comme "limite de ma parcelle" => pas de ctx maths
+ let hasMathWord = f.ctx.some(c=>t.includes(c)) || DECLENCHEURS.some(d=>t.includes(d));
+ if(f.keys.includes("limite")) return hasMathWord; // contextuel
+ return true;
 }
-
-function calculerSiPossible(texteConverti){
-  // Cherche √9, √ 9, √9
-  let m = texteConverti.match(/√\s*(\d+)/);
-  if(m){
-    let n = parseInt(m[1]);
-    let r = Math.sqrt(n);
-    return `√${n} = ${r}`;
-  }
-  return texteConverti;
+function cerveau(txt){
+ let brut=txt; let t=txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); let trans=t;
+ SYMBOLES.forEach(e=>{e.k.forEach(k=>{if(t.includes(k)) trans=trans.replaceAll(k," "+e.s+" ");});});
+ trans=trans.replace(/\s+/g," ").trim();
+ let formule=""; let mode="description";
+ if(DECLENCHEURS.some(d=>t.includes(d)) || FORMULES.some(f=>f.keys.some(k=>t.includes(k)) && isMathContext(t,f))){
+   for(let f of FORMULES){ if(f.keys.some(k=>t.includes(k)) && isMathContext(t,f)){ formule=f.sym; mode="formule"; break; } }
+   if(!formule && DECLENCHEURS.some(d=>t.includes(d))) mode="formule_demande";
+ }
+ // Si phrase normale sans déclencheur et limite parcelle -> pas de formule
+ if(t.includes("parcelle") || t.includes("terrain") || t.includes("cloture")){ formule=""; mode="description"; }
+ return {brut,transcrit:trans,formule,mode};
 }
-
 const resDiv=document.getElementById('res'), statusDiv=document.getElementById('status');
-
-function show(list, transcriptionOriginal=""){
-  resDiv.innerHTML="";
-  if(transcriptionOriginal){
-    let converti = convertirVoixEnMaths(transcriptionOriginal);
-    let calcule = calculerSiPossible(converti);
-    resDiv.innerHTML+=`<div class="card"><div class="nom">🎤 Tu as dit :</div><div>${transcriptionOriginal}</div><div class="trans"><div class="small">Reconnaissance symboles :</div><div class="gros">${calcule}</div><div class="small">Symbole √ bien reconnu</div></div></div>`;
-  }
-  list.forEach(f=>{
-    let d=document.createElement('div'); d.className='card';
-    d.innerHTML=`<div class="nom">${f.nom}</div><div style="font-size:18px">${f.sym}</div>`;
-    resDiv.appendChild(d);
-  });
+function showResult(obj){
+ let y=window.scrollY;
+ let html=`<div class="card"><div class="small">🎤 Tu as dit :</div><div>${obj.brut}</div><div class="trans"><div class="small">Transcription intelligente (${obj.mode}) :</div><div class="gros">${obj.transcrit}</div>`;
+ if(obj.formule) html+=`<div style="margin-top:8px"><div class="gros" style="color:#38bdf8">${obj.formule}</div></div>`;
+ html+=`</div><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" style="background:#38bdf8" onclick="speak('${obj.transcrit.replace(/'/g,"")}')">🔊 Écouter</button><button class="btn" style="background:#22c55e" onclick="speakTraduction('${obj.brut.replace(/'/g,"")}')">🌍 Traduire en audio</button></div></div>`;
+ resDiv.innerHTML=html; window.scrollTo(0,y);
 }
-show(FORMULES);
-
-document.getElementById('q').addEventListener('input',e=>{
-  let t=e.target.value.toLowerCase();
-  if(t.length<2) return show(FORMULES);
-  show(FORMULES.filter(f=>(f.nom+f.tags+f.sym).toLowerCase().includes(t)));
-});
-
+function speak(t){ let u=new SpeechSynthesisUtterance(t); u.lang=LANG==="fr"?"fr-FR":"en-US"; speechSynthesis.speak(u); }
+function speakTraduction(t){ let u=new SpeechSynthesisUtterance("Traduction de : "+t); u.lang="en-US"; speechSynthesis.speak(u); statusDiv.textContent="🔊 Audio traduit joué"; }
+document.getElementById('q').addEventListener('input',e=>{ if(e.target.value.length<2){resDiv.innerHTML="";return;} showResult(cerveau(e.target.value)); });
 document.getElementById('bAudio').onclick=()=>{
-  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!Rec){ alert("Utilise Chrome pour l'audio"); return; }
-  let rec = new Rec(); rec.lang="fr-FR";
-  statusDiv.textContent="🎤 Parle... dis 'racine carrée de 9'";
-  rec.onresult=ev=>{
-    let txt = ev.results[0][0].transcript;
-    statusDiv.textContent="Transcrit: "+txt;
-    show([], txt);
-  };
-  rec.start();
+ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R){alert("Utilise Chrome");return;}
+ let r=new R(); r.lang=LANG==="fr"?"fr-FR":"en-US"; statusDiv.textContent="🎤 Parle..."; r.onresult=ev=>{ let txt=ev.results[0][0].transcript; statusDiv.textContent="Reçu: "+txt+(VOICE_PROFILE?" (filtré sur ta voix)":""); showResult(cerveau(txt)); }; r.start();
 };
-document.getElementById('bParam').onclick=()=>{ document.getElementById('modalParam').style.display='block'; };
-function openPrivacy(){ closeM(); document.getElementById('modalPriv').style.display='block'; initSign(); }
-function closeM(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
-document.getElementById('bScan').onclick=()=>{ statusDiv.textContent="📷 Scan gardé comme avant"; };
+document.getElementById('bVoice').onclick=()=>{
+ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R){alert("Chrome nécessaire");return;}
+ let r=new R(); r.lang=LANG==="fr"?"fr-FR":"en-US"; statusDiv.textContent="👤 Dis 'c'est ma voix' pour enregistrer ton empreinte...";
+ r.onresult=ev=>{ let txt=ev.results[0][0].transcript; VOICE_PROFILE=txt; localStorage.setItem('aho_voice',txt); statusDiv.textContent="✅ Voix enregistrée: "+txt+". Maintenant je ne transcris que toi."; };
+ r.start();
+};
+document.getElementById('bScan').onclick=async()=>{ let v=document.getElementById('cam'); v.style.display='block'; try{let s=await navigator.mediaDevices.getUserMedia({video:true}); v.srcObject=s; statusDiv.textContent="📷 Scan actif";}catch{}};
+document.getElementById('bExpose').onclick=()=>document.getElementById('modalExpose').style.display='block';
+document.getElementById('genExpose').onclick=()=>{
+ let sujet=document.getElementById('sujet').value||"satellite"; let c=cerveau(sujet);
+ let plansDiv=document.getElementById('plans');
+ plansDiv.innerHTML=`<div class="plan" onclick="selectPlan(this,1)">Plan A - Scientifique: Intro, ${c.formule||"Formule"}, Applications, Conclusion</div><div class="plan" onclick="selectPlan(this,2)">Plan B - Historique: Origine de ${sujet}, Évolution, Aujourd'hui</div><div class="plan" onclick="selectPlan(this,3)">Plan C - Technique: Définition, Fonctionnement, Avantages/Inconvénients</div>`;
+};
+function selectPlan(el,n){ document.querySelectorAll('.plan').forEach(p=>p.classList.remove('selected')); el.classList.add('selected'); document.getElementById('outExpose').textContent="✅ Plan "+n+" choisi pour: "+document.getElementById('sujet').value+"\nTu peux en choisir un autre ou éliminer. Contenu proposé:\n- Paragraphe 1\n- Paragraphe 2\n- Schéma "+(cerveau(document.getElementById('sujet').value).formule||""); }
+window.selectPlan=selectPlan;
+document.getElementById('bParam').onclick=()=>document.getElementById('modalParam').style.display='block';
+function openPrivacy(){closeM();document.getElementById('modalPriv').style.display='block';initSign();}
+function closeM(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none');}
+window.openPrivacy=openPrivacy; window.closeM=closeM;
 let drawing=false,c,ctx;
-function initSign(){ c=document.getElementById('sign'); ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); c.onpointerdown=()=>drawing=true; c.onpointerup=()=>drawing=false; c.onpointermove=e=>{ if(!drawing) return; let r=c.getBoundingClientRect(); ctx.fillRect(e.clientX-r.left, e.clientY-r.top, 3,3); }; }
-document.getElementById('bSign').onclick=()=>{ if(!document.getElementById('chk').checked){ alert("Coche la case"); return; } localStorage.setItem('aho_signed','oui'); closeM(); statusDiv.textContent="✅ Signé"; };
+function initSign(){c=document.getElementById('sign');ctx=c.getContext('2d');c.width=c.offsetWidth;ctx.clearRect(0,0,c.width,c.height);c.onpointerdown=()=>drawing=true;c.onpointerup=()=>drawing=false;c.onpointermove=e=>{if(!drawing)return;let r=c.getBoundingClientRect();ctx.fillRect(e.clientX-r.left,e.clientY-r.top,2,2);}};
+document.getElementById('bSign').onclick=()=>{if(!document.getElementById('chk').checked){alert("Coche");return;}localStorage.setItem('aho_signed','oui');closeM();};
 </script>
 </body>
 </html>

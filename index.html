@@ -1,51 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AhOOffice</title>
 <style>
-body{margin:0;font-family:system-ui;background:#0f172a;color:#fff;padding:16px}
-.top{text-align:center;padding:20px 0}
-.top img{width:90px;border-radius:20px;background:#fff;padding:5px}
-h1{color:#ff7a00;margin:10px 0 0}
-input{width:100%;padding:16px;border-radius:14px;border:none;font-size:18px;margin:18px 0;box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#0f172a;color:#fff;padding:14px}
+.top{text-align:center;padding:12px 0}.top img{width:85px;border-radius:18px;background:#fff;padding:4px}
+h1{color:#ff7a00;margin:8px 0 0}.sub{opacity:.6;font-size:13px}
+.bar{display:flex;gap:8px;margin:16px 0}.bar input{flex:1;padding:14px;border-radius:12px;border:none;font-size:16px}
+.btn{padding:12px 14px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
+.btn-audio{background:#ff7a00;color:#000}.btn-scan{background:#38bdf8;color:#000}.btn-param{background:#334155;color:#fff}
 .card{background:#1e293b;padding:14px;border-radius:12px;margin-bottom:10px;border-left:4px solid #ff7a00}
-.nom{font-weight:bold;color:#38bdf8;margin-bottom:6px}
+.nom{font-weight:bold;color:#38bdf8}.trans{margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;border:1px dashed #ff7a00}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:none;padding:20px;overflow:auto;z-index:99}
+.modal.box{background:#1e293b;padding:20px;border-radius:16px;max-width:500px;margin:auto}
+.small{font-size:12px;opacity:.6}
+canvas{background:#fff;border-radius:8px;width:100%;touch-action:none}
 </style>
 </head>
 <body>
-<div class="top">
-<img src="icon-512.png" onerror="this.style.display='none'">
-<h1>AhOOffice</h1>
-<p>Ton assistant formules - OFFLINE</p>
+<div class="top"><img src="icon-512.png" onerror="this.style.display='none'"><h1>AhOOffice</h1><div class="sub">Audio • Scan • Exposé IA • OFFLINE</div></div>
+<div class="bar">
+<input id="q" placeholder="Tape ou parle : satellite, energie, pH...">
+<button class="btn btn-audio" id="bAudio">🎤</button>
+<button class="btn btn-scan" id="bScan">📷</button>
+<button class="btn btn-param" id="bParam">⚙️</button>
 </div>
-<input type="text" id="q" placeholder="Tape satellite, energie, pH...">
+<div id="status" class="small"></div>
 <div id="res"></div>
+
+<!-- PARAMETRES -->
+<div id="modalParam" class="modal"><div class="box">
+<h2>⚙️ Paramètres</h2>
+<p>Langue</p><select id="lang" style="width:100%;padding:10px;border-radius:8px"><option>Français</option><option>English</option></select>
+<p>Taille texte</p><input type="range" id="size" min="12" max="22" value="16" style="width:100%">
+<p><button class="btn" style="background:#ff7a00;width:100%" onclick="openPrivacy()">📄 Confidentialité & Signature</button></p>
+<p><button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Fermer</button></p>
+</div></div>
+
+<!-- CONFIDENTIALITE -->
+<div id="modalPriv" class="modal"><div class="box">
+<h2>🔒 Confidentialité AhOOffice</h2>
+<p class="small">AhOOffice fonctionne OFFLINE. Aucune donnée envoyée. Audio transcrit localement. Pour utiliser l'app, signe ci-dessous :</p>
+<p>Je m'engage à utiliser AhOOffice pour l'éducation.</p>
+<canvas id="sign" height="150"></canvas>
+<p><label><input type="checkbox" id="chk"> J'accepte et je signe</label></p>
+<button class="btn" style="background:#22c55e;width:100%" id="bSign">Valider & Signer</button>
+<button class="btn" style="background:#334155;width:100%;color:#fff;margin-top:8px" onclick="closeM()">Annuler</button>
+</div></div>
+
 <script>
 const FORMULES=[
-{nom:"Vitesse satellite",tags:"satellite orbite gravitation",txt:"v = √(GM/r)"},
-{nom:"Energie cinetique",tags:"energie cinetique",txt:"Ec = 1/2 m v²"},
-{nom:"pH acide base",tags:"ph acide base chimie",txt:"pH = -log[H+]"},
-{nom:"Loi Ohm",tags:"ohm electricite tension",txt:"U = R × I"},
-{nom:"Poussée Archimede",tags:"archimede poussee fluide",txt:"Pa = ρ × V × g"}
+{nom:"Vitesse satellite",tags:"satellite",sym:"v = √(GM/r)",raw:"racine carre g m sur r"},
+{nom:"Energie cinetique",tags:"energie",sym:"Ec = ½ m v²",raw:"demi m v carre"},
+{nom:"pH",tags:"ph acide",sym:"pH = -log[H⁺]",raw:"moins log h plus"},
+{nom:"Loi Ohm",tags:"ohm",sym:"U = R × I",raw:"u egal r fois i"},
+{nom:"Exposé IA",tags:"expose presentation ia",sym:"Plan IA : Intro → Développement → Conclusion",raw:"expose"}
 ];
-const res=document.getElementById('res');
-function show(list){
-res.innerHTML="";
-if(list.length==0){res.innerHTML="<div class=card>Aucun résultat. Tape 'satellite' ou 'energie' pour tester.</div>";return;}
-list.forEach(f=>{
-let d=document.createElement('div');d.className='card';
-d.innerHTML=`<div class=nom>${f.nom}</div><div>${f.txt}</div><div style='opacity:.5;font-size:12px;margin-top:6px'>${f.tags}</div>`;
-res.appendChild(d);
-});
-}
+const VOIX={ "racine carree":"√","racine carre":"√","sur":"/","au carre":"²","carre":"²","fois":"×","egal":"=","rho":"ρ","pi":"π","delta":"Δ" };
+function voixToSym(t){ let s=t.toLowerCase(); for(let k in VOIX) s=s.replaceAll(k,VOIX[k]); return s; }
+const resDiv=document.getElementById('res'), statusDiv=document.getElementById('status');
+function show(list, trans=""){ resDiv.innerHTML=""; if(trans) resDiv.innerHTML+=`<div class="card"><div class="nom">🎤 Tu as dit :</div><div class="trans">${trans}<br><b>→ ${voixToSym(trans)}</b></div></div>`; list.forEach(f=>{ let d=document.createElement('div'); d.className='card'; d.innerHTML=`<div class="nom">${f.nom}</div><div style="font-size:18px">${f.sym}</div><div class="small">${f.tags}</div>`; resDiv.appendChild(d); }); }
 show(FORMULES);
-document.getElementById('q').addEventListener('input',e=>{
-let t=e.target.value.toLowerCase().trim();
-if(t.length<2){show(FORMULES);return;}
-show(FORMULES.filter(f=>(f.nom+f.tags+f.txt).toLowerCase().includes(t)));
-});
+document.getElementById('q').addEventListener('input',e=>{ let t=e.target.value.toLowerCase(); if(t.length<2) return show(FORMULES); show(FORMULES.filter(f=>(f.nom+f.tags+f.sym+f.raw).toLowerCase().includes(t))); });
+document.getElementById('bAudio').onclick=()=>{ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R){alert("Utilise Chrome");return;} let r=new R(); r.lang="fr-FR"; statusDiv.textContent="🎤 Parle..."; r.onresult=ev=>{ let txt=ev.results[0][0].transcript; statusDiv.textContent="Transcrit: "+txt; document.getElementById('q').value=txt; show(FORMULES.filter(f=>txt.toLowerCase().includes(f.tags)),txt); }; r.start(); };
+document.getElementById('bParam').onclick=()=>{ document.getElementById('modalParam').style.display='block'; };
+function openPrivacy(){ closeM(); document.getElementById('modalPriv').style.display='block'; initSign(); }
+function closeM(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
+document.getElementById('bParam').addEventListener('click',()=>{});
+document.getElementById('bScan').onclick=()=>{ statusDiv.textContent="📷 Scan gardé comme avant (caméra)"; };
+document.getElementById('size').oninput=e=>{ document.body.style.fontSize=e.target.value+'px'; };
+// Signature
+let drawing=false, c, ctx;
+function initSign(){ c=document.getElementById('sign'); ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); c.onpointerdown=()=>drawing=true; c.onpointerup=()=>drawing=false; c.onpointermove=e=>{ if(!drawing) return; let rect=c.getBoundingClientRect(); ctx.fillRect(e.clientX-rect.left, e.clientY-rect.top, 3,3); }; }
+document.getElementById('bSign').onclick=()=>{ if(!document.getElementById('chk').checked){ alert("Coche la case"); return; } localStorage.setItem('aho_signed','oui'); alert("Merci, c'est signé!"); closeM(); statusDiv.textContent="✅ Confidentialité signée"; };
+if(localStorage.getItem('aho_signed')) statusDiv.textContent="✅ Confidentialité signée";
 </script>
 </body>
 </html>

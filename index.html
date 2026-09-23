@@ -1,0 +1,48 @@
+// DANS TON INDEX.HTML - V11 TOUT OU RIEN
+let BASE_FORMULES = [];
+
+async function chargerBase() {
+  let res = await fetch('./formules_totales.json');
+  BASE_FORMULES = await res.json();
+  console.log("BASE CHARGÉE:", BASE_FORMULES.length, "formules");
+}
+chargerBase();
+
+function formatMathTotal(raw){
+  if(!raw) return "";
+  let txt = raw.toLowerCase()
+    .replace(/nombre de morts|molles/g, "moles")
+    .replace(/moulin/g, "mol/L")
+    .replace(/sati/g, "satellite")
+    .replace(/repère/g, "repère");
+
+  // Anti-boucle ton bug
+  txt = txt.replace(/\b(.{12,})\s+\1\b/g, "$1");
+
+  // Si c'est une phrase normale style "on a fermé la porte" -> on garde
+  let isScientifique = /mole|concentration|vitesse|force|énergie|repère|satellite|ph|densité|pression|puissance|travail|intégrale|limite|dérivée|alcane|ester|acide|onde|photon/i.test(txt);
+  if(!isScientifique && txt.split(" ").length > 5) return raw;
+
+  // MOTEUR TOUT OU RIEN - il score chaque formule
+  let meilleurScore = 0;
+  let meilleure = null;
+
+  for(let f of BASE_FORMULES){
+    let score = 0;
+    for(let mot of f.mots_cles){
+      if(txt.includes(mot)) score++;
+    }
+    // Bonus si tous les mots clés sont présents
+    if(score === f.mots_cles.length) score += 10;
+    if(score > meilleurScore){
+      meilleurScore = score;
+      meilleure = f;
+    }
+  }
+
+  if(meilleure && meilleurScore > 0){
+    return `${meilleure.nom} : ${meilleure.formule}  [${meilleure.unite || ''}]`;
+  }
+
+  return raw; // si vraiment rien, on garde ta voix telle quelle
+}

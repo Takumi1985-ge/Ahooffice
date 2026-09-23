@@ -2,83 +2,50 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AhOOffice - V11</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-512.png">
-<meta name="theme-color" content="#ff7a00">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AhOOffice</title>
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:20px}
-.header{text-align:center}
-.header img{width:90px;border-radius:20px}
-h1{color:#ff7a00;margin:10px 0}
-input{width:100%;padding:16px;border-radius:14px;border:none;font-size:18px;margin:20px 0;box-sizing:border-box}
-.card{background:#1e293b;padding:15px;border-radius:14px;margin-bottom:12px;border-left:4px solid #ff7a00}
-.nom{font-weight:bold;color:#38bdf8}
-.formule{margin-top:10px;font-size:18px;overflow-x:auto}
+body{margin:0;font-family:system-ui;background:#0f172a;color:#fff;padding:16px}
+.top{text-align:center;padding:20px 0}
+.top img{width:90px;border-radius:20px;background:#fff;padding:5px}
+h1{color:#ff7a00;margin:10px 0 0}
+input{width:100%;padding:16px;border-radius:14px;border:none;font-size:18px;margin:18px 0;box-sizing:border-box}
+.card{background:#1e293b;padding:14px;border-radius:12px;margin-bottom:10px;border-left:4px solid #ff7a00}
+.nom{font-weight:bold;color:#38bdf8;margin-bottom:6px}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-<div class="header">
-<img src="icon-512.png" alt="logo">
+<div class="top">
+<img src="icon-512.png" onerror="this.style.display='none'">
 <h1>AhOOffice</h1>
+<p>Ton assistant formules - OFFLINE</p>
 </div>
-
-<input type="text" id="search" placeholder="Tape satellite, énergie, pH...">
-<div id="resultats">Chargement de la base...</div>
-
+<input type="text" id="q" placeholder="Tape satellite, energie, pH...">
+<div id="res"></div>
 <script>
-// DANS TON INDEX.HTML - V11 TOUT OU RIEN
-let BASE_FORMULES = [];
-
-async function chargerBase() {
-  try {
-    let res = await fetch('./formules_totales.json');
-    if(!res.ok) throw new Error("json pas trouvé");
-    BASE_FORMULES = await res.json();
-    console.log("BASE CHARGÉE:", BASE_FORMULES.length, "formules");
-    afficher(BASE_FORMULES);
-  } catch(e) {
-    console.log("Pas de json, mode secours", e);
-    BASE_FORMULES = [
-      {nom:"Vitesse satellite", mots:["satellite","orbite"], formule:"v = \\sqrt{GM/r}"},
-      {nom:"Énergie cinétique", mots:["énergie","cinétique"], formule:"E_c = 1/2 m v^2"},
-      {nom:"pH", mots:["ph","acide"], formule:"pH = -log[H+]"}
-    ];
-    afficher(BASE_FORMULES);
-  }
-}
-
-function formatMathTotal(raw){
-  if(!raw) return "";
-  if(raw.includes("$$") || raw.includes("\\")) return raw;
-  return `$$${raw}$$`;
-}
-
-function afficher(liste){
-  const div=document.getElementById('resultats');
-  div.innerHTML="";
-  if(liste.length===0){div.innerHTML="Aucun résultat"; return;}
-  liste.slice(0,50).forEach(f=>{
-    const c=document.createElement('div'); c.className='card';
-    c.innerHTML=`<div class="nom">${f.nom||f.titre||"Formule"}</div><div class="formule">${formatMathTotal(f.formule||f.latex||"")}</div>`;
-    div.appendChild(c);
-  });
-  if(window.MathJax) MathJax.typesetPromise();
-}
-
-document.getElementById('search').addEventListener('input', (e)=>{
-  let txt=e.target.value.toLowerCase().trim();
-  if(txt.length<2){ afficher(BASE_FORMULES); return; }
-  let res = BASE_FORMULES.filter(f=>{
-    let tout = (JSON.stringify(f)).toLowerCase();
-    return tout.includes(txt);
-  });
-  afficher(res);
+const FORMULES=[
+{nom:"Vitesse satellite",tags:"satellite orbite gravitation",txt:"v = √(GM/r)"},
+{nom:"Energie cinetique",tags:"energie cinetique",txt:"Ec = 1/2 m v²"},
+{nom:"pH acide base",tags:"ph acide base chimie",txt:"pH = -log[H+]"},
+{nom:"Loi Ohm",tags:"ohm electricite tension",txt:"U = R × I"},
+{nom:"Poussée Archimede",tags:"archimede poussee fluide",txt:"Pa = ρ × V × g"}
+];
+const res=document.getElementById('res');
+function show(list){
+res.innerHTML="";
+if(list.length==0){res.innerHTML="<div class=card>Aucun résultat. Tape 'satellite' ou 'energie' pour tester.</div>";return;}
+list.forEach(f=>{
+let d=document.createElement('div');d.className='card';
+d.innerHTML=`<div class=nom>${f.nom}</div><div>${f.txt}</div><div style='opacity:.5;font-size:12px;margin-top:6px'>${f.tags}</div>`;
+res.appendChild(d);
 });
-
-chargerBase();
+}
+show(FORMULES);
+document.getElementById('q').addEventListener('input',e=>{
+let t=e.target.value.toLowerCase().trim();
+if(t.length<2){show(FORMULES);return;}
+show(FORMULES.filter(f=>(f.nom+f.tags+f.txt).toLowerCase().includes(t)));
+});
 </script>
 </body>
 </html>

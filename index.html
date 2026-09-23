@@ -11,17 +11,18 @@ h1{color:#ff7a00;margin:8px 0 0}.sub{opacity:.6;font-size:13px}
 .btn{padding:12px 14px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
 .btn-audio{background:#ff7a00;color:#000}.btn-scan{background:#38bdf8;color:#000}.btn-param{background:#334155;color:#fff}
 .card{background:#1e293b;padding:14px;border-radius:12px;margin-bottom:10px;border-left:4px solid #ff7a00}
-.nom{font-weight:bold;color:#38bdf8}.trans{margin-top:8px;padding:10px;background:#0f172a;border-radius:8px;border:1px dashed #ff7a00}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:none;padding:20px;overflow:auto;z-index:99}
-.modal.box{background:#1e293b;padding:20px;border-radius:16px;max-width:500px;margin:auto}
+.nom{font-weight:bold;color:#38bdf8}.gros{font-size:32px;margin:8px 0;color:#fff}
+.trans{padding:10px;background:#0f172a;border-radius:8px;border:1px dashed #ff7a00;margin-top:8px}
 .small{font-size:12px;opacity:.6}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:none;padding:20px;overflow:auto;z-index:99}
+.box{background:#1e293b;padding:20px;border-radius:16px;max-width:500px;margin:20px auto}
 canvas{background:#fff;border-radius:8px;width:100%;touch-action:none}
 </style>
 </head>
 <body>
 <div class="top"><img src="icon-512.png" onerror="this.style.display='none'"><h1>AhOOffice</h1><div class="sub">Audio • Scan • Exposé IA • OFFLINE</div></div>
 <div class="bar">
-<input id="q" placeholder="Tape ou parle : satellite, energie, pH...">
+<input id="q" placeholder="Tape ou parle...">
 <button class="btn btn-audio" id="bAudio">🎤</button>
 <button class="btn btn-scan" id="bScan">📷</button>
 <button class="btn btn-param" id="bParam">⚙️</button>
@@ -29,52 +30,103 @@ canvas{background:#fff;border-radius:8px;width:100%;touch-action:none}
 <div id="status" class="small"></div>
 <div id="res"></div>
 
-<!-- PARAMETRES -->
 <div id="modalParam" class="modal"><div class="box">
 <h2>⚙️ Paramètres</h2>
-<p>Langue</p><select id="lang" style="width:100%;padding:10px;border-radius:8px"><option>Français</option><option>English</option></select>
-<p>Taille texte</p><input type="range" id="size" min="12" max="22" value="16" style="width:100%">
-<p><button class="btn" style="background:#ff7a00;width:100%" onclick="openPrivacy()">📄 Confidentialité & Signature</button></p>
-<p><button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Fermer</button></p>
+<button class="btn" style="background:#ff7a00;width:100%" onclick="openPrivacy()">📄 Confidentialité & Signature</button><br><br>
+<button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Fermer</button>
 </div></div>
 
-<!-- CONFIDENTIALITE -->
 <div id="modalPriv" class="modal"><div class="box">
-<h2>🔒 Confidentialité AhOOffice</h2>
-<p class="small">AhOOffice fonctionne OFFLINE. Aucune donnée envoyée. Audio transcrit localement. Pour utiliser l'app, signe ci-dessous :</p>
-<p>Je m'engage à utiliser AhOOffice pour l'éducation.</p>
-<canvas id="sign" height="150"></canvas>
-<p><label><input type="checkbox" id="chk"> J'accepte et je signe</label></p>
-<button class="btn" style="background:#22c55e;width:100%" id="bSign">Valider & Signer</button>
-<button class="btn" style="background:#334155;width:100%;color:#fff;margin-top:8px" onclick="closeM()">Annuler</button>
+<h2>🔒 Confidentialité</h2><p class="small">AhOOffice OFFLINE, rien n'est envoyé.</p>
+<canvas id="sign" height="140"></canvas>
+<p><label><input type="checkbox" id="chk"> J'accepte</label></p>
+<button class="btn" style="background:#22c55e;width:100%" id="bSign">Valider & Signer</button><br><br>
+<button class="btn" style="background:#334155;width:100%;color:#fff" onclick="closeM()">Annuler</button>
 </div></div>
 
 <script>
 const FORMULES=[
-{nom:"Vitesse satellite",tags:"satellite",sym:"v = √(GM/r)",raw:"racine carre g m sur r"},
-{nom:"Energie cinetique",tags:"energie",sym:"Ec = ½ m v²",raw:"demi m v carre"},
-{nom:"pH",tags:"ph acide",sym:"pH = -log[H⁺]",raw:"moins log h plus"},
-{nom:"Loi Ohm",tags:"ohm",sym:"U = R × I",raw:"u egal r fois i"},
-{nom:"Exposé IA",tags:"expose presentation ia",sym:"Plan IA : Intro → Développement → Conclusion",raw:"expose"}
+{nom:"Vitesse satellite",tags:"satellite",sym:"v = √(GM/r)"},
+{nom:"Energie cinetique",tags:"energie",sym:"Ec = ½ m v²"},
+{nom:"pH",tags:"ph",sym:"pH = -log[H⁺]"},
+{nom:"Loi Ohm",tags:"ohm",sym:"U = R × I"}
 ];
-const VOIX={ "racine carree":"√","racine carre":"√","sur":"/","au carre":"²","carre":"²","fois":"×","egal":"=","rho":"ρ","pi":"π","delta":"Δ" };
-function voixToSym(t){ let s=t.toLowerCase(); for(let k in VOIX) s=s.replaceAll(k,VOIX[k]); return s; }
+
+function convertirVoixEnMaths(texte){
+  let t = texte.toLowerCase();
+  // Normalise accents pour mieux reconnaitre
+  t = t.replaceAll("carrée","carree").replaceAll("carré","carre").replaceAll("égale","egale");
+
+  // Dictionnaire son -> symbole
+  t = t.replaceAll("racine carree de","√");
+  t = t.replaceAll("racine carree","√");
+  t = t.replaceAll("racine carre de","√");
+  t = t.replaceAll("racine carre","√");
+  t = t.replaceAll("au carre","²");
+  t = t.replaceAll("carre","²");
+  t = t.replaceAll("fois","×");
+  t = t.replaceAll("divise par","/");
+  t = t.replaceAll("sur","/");
+  t = t.replaceAll("egale", "=");
+
+  // Nettoie les espaces autour de √
+  t = t.replaceAll("√ ","√").replaceAll("√ ","√");
+  return t;
+}
+
+function calculerSiPossible(texteConverti){
+  // Cherche √9, √ 9, √9
+  let m = texteConverti.match(/√\s*(\d+)/);
+  if(m){
+    let n = parseInt(m[1]);
+    let r = Math.sqrt(n);
+    return `√${n} = ${r}`;
+  }
+  return texteConverti;
+}
+
 const resDiv=document.getElementById('res'), statusDiv=document.getElementById('status');
-function show(list, trans=""){ resDiv.innerHTML=""; if(trans) resDiv.innerHTML+=`<div class="card"><div class="nom">🎤 Tu as dit :</div><div class="trans">${trans}<br><b>→ ${voixToSym(trans)}</b></div></div>`; list.forEach(f=>{ let d=document.createElement('div'); d.className='card'; d.innerHTML=`<div class="nom">${f.nom}</div><div style="font-size:18px">${f.sym}</div><div class="small">${f.tags}</div>`; resDiv.appendChild(d); }); }
+
+function show(list, transcriptionOriginal=""){
+  resDiv.innerHTML="";
+  if(transcriptionOriginal){
+    let converti = convertirVoixEnMaths(transcriptionOriginal);
+    let calcule = calculerSiPossible(converti);
+    resDiv.innerHTML+=`<div class="card"><div class="nom">🎤 Tu as dit :</div><div>${transcriptionOriginal}</div><div class="trans"><div class="small">Reconnaissance symboles :</div><div class="gros">${calcule}</div><div class="small">Symbole √ bien reconnu</div></div></div>`;
+  }
+  list.forEach(f=>{
+    let d=document.createElement('div'); d.className='card';
+    d.innerHTML=`<div class="nom">${f.nom}</div><div style="font-size:18px">${f.sym}</div>`;
+    resDiv.appendChild(d);
+  });
+}
 show(FORMULES);
-document.getElementById('q').addEventListener('input',e=>{ let t=e.target.value.toLowerCase(); if(t.length<2) return show(FORMULES); show(FORMULES.filter(f=>(f.nom+f.tags+f.sym+f.raw).toLowerCase().includes(t))); });
-document.getElementById('bAudio').onclick=()=>{ const R=window.SpeechRecognition||window.webkitSpeechRecognition; if(!R){alert("Utilise Chrome");return;} let r=new R(); r.lang="fr-FR"; statusDiv.textContent="🎤 Parle..."; r.onresult=ev=>{ let txt=ev.results[0][0].transcript; statusDiv.textContent="Transcrit: "+txt; document.getElementById('q').value=txt; show(FORMULES.filter(f=>txt.toLowerCase().includes(f.tags)),txt); }; r.start(); };
+
+document.getElementById('q').addEventListener('input',e=>{
+  let t=e.target.value.toLowerCase();
+  if(t.length<2) return show(FORMULES);
+  show(FORMULES.filter(f=>(f.nom+f.tags+f.sym).toLowerCase().includes(t)));
+});
+
+document.getElementById('bAudio').onclick=()=>{
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!Rec){ alert("Utilise Chrome pour l'audio"); return; }
+  let rec = new Rec(); rec.lang="fr-FR";
+  statusDiv.textContent="🎤 Parle... dis 'racine carrée de 9'";
+  rec.onresult=ev=>{
+    let txt = ev.results[0][0].transcript;
+    statusDiv.textContent="Transcrit: "+txt;
+    show([], txt);
+  };
+  rec.start();
+};
 document.getElementById('bParam').onclick=()=>{ document.getElementById('modalParam').style.display='block'; };
 function openPrivacy(){ closeM(); document.getElementById('modalPriv').style.display='block'; initSign(); }
 function closeM(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
-document.getElementById('bParam').addEventListener('click',()=>{});
-document.getElementById('bScan').onclick=()=>{ statusDiv.textContent="📷 Scan gardé comme avant (caméra)"; };
-document.getElementById('size').oninput=e=>{ document.body.style.fontSize=e.target.value+'px'; };
-// Signature
-let drawing=false, c, ctx;
-function initSign(){ c=document.getElementById('sign'); ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); c.onpointerdown=()=>drawing=true; c.onpointerup=()=>drawing=false; c.onpointermove=e=>{ if(!drawing) return; let rect=c.getBoundingClientRect(); ctx.fillRect(e.clientX-rect.left, e.clientY-rect.top, 3,3); }; }
-document.getElementById('bSign').onclick=()=>{ if(!document.getElementById('chk').checked){ alert("Coche la case"); return; } localStorage.setItem('aho_signed','oui'); alert("Merci, c'est signé!"); closeM(); statusDiv.textContent="✅ Confidentialité signée"; };
-if(localStorage.getItem('aho_signed')) statusDiv.textContent="✅ Confidentialité signée";
+document.getElementById('bScan').onclick=()=>{ statusDiv.textContent="📷 Scan gardé comme avant"; };
+let drawing=false,c,ctx;
+function initSign(){ c=document.getElementById('sign'); ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); c.onpointerdown=()=>drawing=true; c.onpointerup=()=>drawing=false; c.onpointermove=e=>{ if(!drawing) return; let r=c.getBoundingClientRect(); ctx.fillRect(e.clientX-r.left, e.clientY-r.top, 3,3); }; }
+document.getElementById('bSign').onclick=()=>{ if(!document.getElementById('chk').checked){ alert("Coche la case"); return; } localStorage.setItem('aho_signed','oui'); closeM(); statusDiv.textContent="✅ Signé"; };
 </script>
 </body>
 </html>

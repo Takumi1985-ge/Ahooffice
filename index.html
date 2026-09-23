@@ -1,48 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AhOOffice - V11</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-512.png">
+<meta name="theme-color" content="#ff7a00">
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding:20px}
+.header{text-align:center}
+.header img{width:90px;border-radius:20px}
+h1{color:#ff7a00;margin:10px 0}
+input{width:100%;padding:16px;border-radius:14px;border:none;font-size:18px;margin:20px 0;box-sizing:border-box}
+.card{background:#1e293b;padding:15px;border-radius:14px;margin-bottom:12px;border-left:4px solid #ff7a00}
+.nom{font-weight:bold;color:#38bdf8}
+.formule{margin-top:10px;font-size:18px;overflow-x:auto}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="header">
+<img src="icon-512.png" alt="logo">
+<h1>AhOOffice</h1>
+</div>
+
+<input type="text" id="search" placeholder="Tape satellite, énergie, pH...">
+<div id="resultats">Chargement de la base...</div>
+
+<script>
 // DANS TON INDEX.HTML - V11 TOUT OU RIEN
 let BASE_FORMULES = [];
 
 async function chargerBase() {
-  let res = await fetch('./formules_totales.json');
-  BASE_FORMULES = await res.json();
-  console.log("BASE CHARGÉE:", BASE_FORMULES.length, "formules");
+  try {
+    let res = await fetch('./formules_totales.json');
+    if(!res.ok) throw new Error("json pas trouvé");
+    BASE_FORMULES = await res.json();
+    console.log("BASE CHARGÉE:", BASE_FORMULES.length, "formules");
+    afficher(BASE_FORMULES);
+  } catch(e) {
+    console.log("Pas de json, mode secours", e);
+    BASE_FORMULES = [
+      {nom:"Vitesse satellite", mots:["satellite","orbite"], formule:"v = \\sqrt{GM/r}"},
+      {nom:"Énergie cinétique", mots:["énergie","cinétique"], formule:"E_c = 1/2 m v^2"},
+      {nom:"pH", mots:["ph","acide"], formule:"pH = -log[H+]"}
+    ];
+    afficher(BASE_FORMULES);
+  }
 }
-chargerBase();
 
 function formatMathTotal(raw){
   if(!raw) return "";
-  let txt = raw.toLowerCase()
-    .replace(/nombre de morts|molles/g, "moles")
-    .replace(/moulin/g, "mol/L")
-    .replace(/sati/g, "satellite")
-    .replace(/repère/g, "repère");
-
-  // Anti-boucle ton bug
-  txt = txt.replace(/\b(.{12,})\s+\1\b/g, "$1");
-
-  // Si c'est une phrase normale style "on a fermé la porte" -> on garde
-  let isScientifique = /mole|concentration|vitesse|force|énergie|repère|satellite|ph|densité|pression|puissance|travail|intégrale|limite|dérivée|alcane|ester|acide|onde|photon/i.test(txt);
-  if(!isScientifique && txt.split(" ").length > 5) return raw;
-
-  // MOTEUR TOUT OU RIEN - il score chaque formule
-  let meilleurScore = 0;
-  let meilleure = null;
-
-  for(let f of BASE_FORMULES){
-    let score = 0;
-    for(let mot of f.mots_cles){
-      if(txt.includes(mot)) score++;
-    }
-    // Bonus si tous les mots clés sont présents
-    if(score === f.mots_cles.length) score += 10;
-    if(score > meilleurScore){
-      meilleurScore = score;
-      meilleure = f;
-    }
-  }
-
-  if(meilleure && meilleurScore > 0){
-    return `${meilleure.nom} : ${meilleure.formule}  [${meilleure.unite || ''}]`;
-  }
-
-  return raw; // si vraiment rien, on garde ta voix telle quelle
+  if(raw.includes("$$") || raw.includes("\\")) return raw;
+  return `$$${raw}$$`;
 }
+
+function afficher(liste){
+  const div=document.getElementById('resultats');
+  div.innerHTML="";
+  if(liste.length===0){div.innerHTML="Aucun résultat"; return;}
+  liste.slice(0,50).forEach(f=>{
+    const c=document.createElement('div'); c.className='card';
+    c.innerHTML=`<div class="nom">${f.nom||f.titre||"Formule"}</div><div class="formule">${formatMathTotal(f.formule||f.latex||"")}</div>`;
+    div.appendChild(c);
+  });
+  if(window.MathJax) MathJax.typesetPromise();
+}
+
+document.getElementById('search').addEventListener('input', (e)=>{
+  let txt=e.target.value.toLowerCase().trim();
+  if(txt.length<2){ afficher(BASE_FORMULES); return; }
+  let res = BASE_FORMULES.filter(f=>{
+    let tout = (JSON.stringify(f)).toLowerCase();
+    return tout.includes(txt);
+  });
+  afficher(res);
+});
+
+chargerBase();
+</script>
+</body>
+</html>

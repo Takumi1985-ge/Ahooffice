@@ -3,186 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Roberto - V23 Finale</title>
+<title>Ahooffice V23</title>
 <style>
-body{font-family:Arial; margin:0; padding:10px; background:#fff; color:#000;}
-.services-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-.service-card{border:1px solid #ccc; padding:20px; border-radius:12px; text-align:center; background:#f9f9f9; cursor:pointer;}
-.service-card.icone{font-size:30px;}
-section{margin-top:20px; border:1px solid #ddd; padding:15px; border-radius:10px; background:white;}
-textarea, #editeur-expose{width:100%; min-height:120px; padding:10px; font-size:18px; border-radius:8px; border:1px solid #ccc;}
-.toolbar-word button{margin:2px; padding:6px;}
-#panneau-parametres{background:#f9f9f9;}
+body{font-family:Arial;margin:0;padding:10px;background:#fff;color:#000}
+.card{border:1px solid #ddd;border-radius:15px;padding:15px;margin:15px 0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.service-card{border:2px solid #007aff;border-radius:12px;padding:20px;text-align:center;cursor:pointer}
+.icone{font-size:30px}
+#audioBox, #exposeEditeur, #chatBox{min-height:150px;max-height:300px;overflow-y:auto;padding:15px;border-radius:12px;background:#f9f9ff;border:2px solid #007aff;white-space:pre-wrap}
+.toolbar-word button{padding:8px;margin:2px;border-radius:6px;border:1px solid #ccc}
 </style>
 </head>
 <body>
 
-<!-- CARACTERISTIQUE 1 - ACCUEIL -->
-<section id="accueil">
-<h2>Nos Services</h2>
-<div class="services-grid">
-  <div class="service-card" onclick="document.getElementById('audio-transcription').scrollIntoView()"><span class="icone">🎙️</span><h3>Audio</h3></div>
-  <div class="service-card" onclick="document.getElementById('expose-word').scrollIntoView()"><span class="icone">📊</span><h3>Exposé Excel / Word</h3></div>
-  <div class="service-card" onclick="document.getElementById('panneau-parametres').scrollIntoView()"><span class="icone">⚙️</span><h3>Paramètres</h3></div>
-  <div class="service-card" onclick="document.getElementById('chat-discussion').scrollIntoView()"><span class="icone">💬</span><h3>Discuter IA</h3></div>
-</div>
+<!-- CARACTERISTIQUE 1 - ACCUEIL : Audio 1er, Excel 2eme -->
+<section id="accueil" class="card">
+  <h2>Nos Services</h2>
+  <div class="services-grid">
+    <div class="service-card" onclick="document.getElementById('audio-transcription').scrollIntoView()"><span class="icone">🎙️</span><h3>Audio</h3></div>
+    <div class="service-card" onclick="document.getElementById('expose-word').scrollIntoView()"><span class="icone">📊</span><h3>Exposé Excel</h3></div>
+    <div class="service-card"><span class="icone">📄</span><h3>Autres Services</h3></div>
+    <div class="service-card" onclick="document.getElementById('chat-ia').scrollIntoView()"><span class="icone">💬</span><h3>Assistant Général</h3></div>
+  </div>
 </section>
 
-<!-- CARACTERISTIQUE 2 - AUDIO + FILTRE + LANGUES -->
-<section id="audio-transcription">
-<h2>🎙️ Audio -> Texte <button id="btn-params">⋮</button></h2>
-<button id="btn-record" style="background:red;color:white;padding:10px;border:none;border-radius:8px;">🔴 Enregistrer</button>
-<button id="btn-stop" style="padding:10px;border-radius:8px;">⏹️ Stop</button>
+<!-- CARACTERISTIQUE 2 + 4 + 5 - AUDIO CORRIGÉ : NE S'EFFACE PLUS + LANGUES + FILTRE VOIX -->
+<section id="audio-transcription" class="card">
+  <h2>🎙️ Audio -> Texte</h2>
+  <p style="font-size:12px;opacity:0.7">Enregistre tout en continu, ne s'efface pas.</p>
 
-<div id="menu-params" style="display:block; margin-top:10px; border:1px solid #ccc; padding:10px; border-radius:8px;">
-  <p>🌍 Langue officielle :</p>
-  <select id="langue-transcription" style="width:100%; padding:8px;">
-    <option value="fr-FR">Français - France / Afrique</option>
-    <option value="en-US">English - USA</option>
-    <option value="ln-CD">Lingala - RDC</option>
-    <option value="sw-KE">Swahili</option>
-    <option value="ar-SA">العربية - Arabe</option>
-    <option value="es-ES">Español</option>
-    <option value="pt-BR">Português - Brésil / Angola</option>
-    <option value="zh-CN">中文 - Chinois</option>
-    <option value="de-DE">Deutsch</option>
-    <option value="hi-IN">हिन्दी - Hindi</option>
-    <option value="ru-RU">Русский</option>
-  </select>
-  <p style="margin-top:10px;">Voix à garder :</p>
-  <select id="voix-filtre" style="width:100%; padding:8px;">
-    <option value="toutes">Toutes les voix</option>
-    <option value="voix1">Voix 1 - Seulement celle-là</option>
-    <option value="voix2">Voix 2</option>
-  </select>
-  <p style="margin-top:10px;">Sortie :</p>
-  <select id="mode-sortie" style="width:100%; padding:8px;">
-    <option value="texte">Audio -> Écrit (transcrire)</option>
-    <option value="audio">Audio -> Audio (garder voix filtrée)</option>
-  </select>
-</div>
+  <label>🌍 Langue :
+    <select id="langue-transcription">
+      <option value="fr-FR">Français</option>
+      <option value="ln-CD">Lingala - RDC</option>
+      <option value="sw-KE">Swahili</option>
+      <option value="en-US">English USA</option>
+      <option value="es-ES">Español</option>
+      <option value="ar-SA">العربية</option>
+      <option value="zh-CN">中文</option>
+      <option value="ru-RU">Русский</option>
+      <option value="pt-BR">Português</option>
+      <option value="de-DE">Deutsch</option>
+    </select>
+  </label>
 
-<textarea id="texte-transcrit" placeholder="La transcription va s'écrire ici avec les symboles ∫ Σ α H₂O..."></textarea>
-<audio id="player" controls style="display:none; width:100%; margin-top:10px;"></audio>
-<p id="status-audio" style="font-size:12px; color:green;"></p>
+  <div style="margin:10px 0;display:flex;gap:10px">
+    <button onclick="startAudio()" style="background:#ff3b30;color:#fff;padding:12px;border:0;border-radius:10px">🔴 Enregistrer</button>
+    <button onclick="stopAudio()" style="background:#333;color:#fff;padding:12px;border:0;border-radius:10px">⏹️ Stop</button>
+    <button onclick="clearAudio()" style="background:#eee;padding:12px;border:0;border-radius:10px">🗑️</button>
+  </div>
+
+  <p>Voix à garder : <select id="voix-filtre"><option value="toutes">Toutes les voix</option><option value="voix1">Voix 1 seule</option></select></p>
+
+  <div id="audioBox">La transcription va apparaître ici et RESTER...</div>
+  <button onclick="sendToExpose()" style="width:100%;margin-top:10px;background:#007aff;color:white;padding:12px;border-radius:10px;border:0">📤 Envoyer vers Exposé</button>
 </section>
 
-<!-- CARACTERISTIQUE 3 - EXPOSE WORD -->
-<section id="expose-word">
-<h2>📊 Exposé</h2>
-<div class="toolbar-word">
-  <button onclick="document.execCommand('bold')">Gras</button>
-  <button onclick="document.execCommand('italic')">Italique</button>
-  <button onclick="document.execCommand('justifyCenter')">Centrer</button>
-  <button onclick="document.execCommand('insertUnorderedList')">Liste</button>
-</div>
-<div id="editeur-expose" contenteditable="true" style="border:1px solid #ccc; min-height:200px; padding:10px; margin-top:10px;">
-<h3>I. INTRODUCTION</h3><p>Écris ici...</p>
-<h3>II. PLAN</h3><p>1... 2... 3...</p>
-<h3>III. DÉVELOPPEMENT</h3><p>La formule ∫ α² + β = γ et H₂O ->...</p>
-<h3>IV. CONCLUSION</h3><p>...</p>
-</div>
+<!-- CARACTERISTIQUE 3 - EXPOSE COMME WORD -->
+<section id="expose-word" class="card">
+  <h2>📊 Exposé - Comme Word</h2>
+  <div class="toolbar-word">
+    <button onclick="document.execCommand('bold')">Gras</button>
+    <button onclick="document.execCommand('italic')">Italique</button>
+    <button onclick="document.execCommand('justifyCenter')">Centrer</button>
+    <button onclick="document.execCommand('insertUnorderedList')">Liste</button>
+  </div>
+  <div id="exposeEditeur" contenteditable="true" style="margin-top:10px">
+    <h3>I. INTRODUCTION</h3><p>Écris ton introduction ici...</p>
+    <h3>II. PLAN</h3><p>1... 2... 3...</p>
+    <h3>III. DÉVELOPPEMENT</h3><p>Écris ici...</p>
+    <h3>IV. CONCLUSION</h3><p>Écris ici...</p>
+  </div>
 </section>
 
-<!-- CARACTERISTIQUE 4 + 5 - PARAMETRES STYLE + AUTORISATIONS -->
-<section id="panneau-parametres">
-<h3>⚙️ Paramètres Style & Couleurs</h3>
-<label>Taille texte transcription : <input type="range" id="taille-texte" min="12" max="48" value="18"> <span id="val-taille">18px</span></label><br><br>
-<label>Police :
-<select id="police-texte"><option value="Arial">Arial</option><option value="Times New Roman">Times</option><option value="Courier New">Courier (Maths)</option><option value="Verdana">Verdana</option></select>
-</label><br><br>
-<label>Fond App : <input type="color" id="couleur-fond" value="#ffffff"></label>
-<label>Texte App : <input type="color" id="couleur-corps" value="#000000"></label><br><br>
-<h4>🔐 Autorisations</h4>
-<button id="btn-demander-autorisations">Autoriser Microphone</button>
-<p id="status-autorisation"></p>
+<!-- CARACTERISTIQUE 5 & 6 - PARAMETRES + PARTAGE -->
+<section id="panneau-parametres" class="card">
+  <h3>⚙️ Paramètres & Partage</h3>
+  <label>Taille texte : <input type="range" id="taille-texte" min="12" max="40" value="18"></label><br>
+  <label>Couleur fond : <input type="color" id="couleur-fond" value="#ffffff"></label>
+  <label>Couleur texte : <input type="color" id="couleur-corps" value="#000000"></label><br><br>
+  <button id="btn-demander-autorisations">🔐 Autoriser Micro</button> <span id="status-autorisation"></span><br><br>
+  <button onclick="partager()" style="background:#25D366;color:white;padding:12px;border-radius:8px;border:0;width:100%">📤 Partager Exposé / Audio</button>
 </section>
 
-<!-- CARACTERISTIQUE 6 - PARTAGE -->
-<section id="zone-partage">
-<button id="btn-partager" style="background:#25D366; color:white; padding:12px; border-radius:8px; border:none; font-size:16px; width:100%;">📤 Partager (WhatsApp, YouTube, Facebook...)</button>
-<p id="status-partage"></p>
-</section>
-
-<!-- CARACTERISTIQUE 7 - CHAT IA -->
-<section id="chat-discussion">
-<h3>💬 Discuter avec l'IA de ton exposé</h3>
-<div id="messages" style="height:200px; overflow-y:auto; background:#fff; border:1px solid #eee; padding:10px;">
-<p><b>IA:</b> Salut Roberto! J'ai lu ton exposé. Pose-moi une question.</p>
-</div>
-<input type="text" id="question" placeholder="Ex: Explique ∫..." style="width:68%; padding:10px;">
-<button id="btn-envoyer" style="padding:10px;">Envoyer</button>
+<!-- CARACTERISTIQUE 7 - IA GENERALE POUR TOUTE L'APP -->
+<section id="chat-ia" class="card">
+  <h2>💬 Assistant Général</h2>
+  <p style="font-size:12px;opacity:0.7">Pour toute l'app, pas seulement l'exposé.</p>
+  <div id="chatBox">Salut Roberto! Pose-moi une question sur n'importe quoi dans l'app.</div>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <input id="questionIA" style="flex:1;padding:12px;border-radius:10px;border:1px solid #ccc" placeholder="Pose ta question...">
+    <button onclick="askIA()" style="background:#007aff;color:white;padding:12px;border-radius:10px;border:0">Envoyer</button>
+  </div>
 </section>
 
 <script>
-// === CERVEAU UNIVERSEL QUE TU AS FAIT - CONNECTÉ ===
+// --- CERVEAU UNIVERSEL ---
 const cerveauUniversel = {
-"plus": "+", "moins": "-", "fois": "×", "multiplié par": "×", "divisé par": "÷", "égal": "=", "égale": "=", "différent de": "≠", "environ": "≈", "plus grand que": ">", "plus petit que": "<", "supérieur ou égal": "≥", "inférieur ou égal": "≤", "pour cent": "%", "plus ou moins": "±", "au carré": "²", "au cube": "³", "racine carrée": "√", "infini": "∞",
-"intégrale": "∫", "integral": "∫", "double intégrale": "∬", "dérivée": "∂", "somme": "Σ", "produit": "Π", "limite": "lim", "tend vers": "→", "exponentielle": "exp", "logarithme": "ln", "factorielle": "!",
-"sinus": "sin", "cosinus": "cos", "tangente": "tan", "fonction": "f(x)",
-"pour tout": "∀", "il existe": "∃", "appartient à": "∈", "union": "∪", "intersection": "∩", "donc": "⇒", "si et seulement si": "⇔",
-"alpha": "α", "bêta": "β", "beta": "β", "gamma": "γ", "delta": "δ", "grand delta": "Δ", "theta": "θ", "pi": "π", "sigma": "σ", "grand sigma": "Σ", "oméga": "ω", "grand oméga": "Ω", "lambda": "λ", "mu": "μ",
-"ohm": "Ω", "H2O": "H₂O", "eau": "H₂O", "CO2": "CO₂", "H2SO4": "H₂SO₄", "flèche": "→", "donne": "→", "réversible": "⇌"
+  "plus": "+", "moins": "-", "fois": "×", "multiplié par": "×", "divisé par": "÷", "égal": "=", "pour cent": "%",
+  "au carré": "²", "au cube": "³", "racine carrée": "√", "infini": "∞",
+  "intégrale": "∫", "dérivée": "∂", "somme": "Σ", "limite": "lim", "tend vers": "→",
+  "sinus": "sin", "cosinus": "cos", "tangente": "tan", "alpha": "α", "bêta": "β", "gamma": "γ", "delta": "δ", "pi": "π", "oméga": "ω",
+  "ohm": "Ω", "H2O": "H₂O", "CO2": "CO₂", "flèche": "→", "donne": "→", "donc": "⇒"
 };
-function cerveauQuiEcoute(phrase){
-  let p = phrase.toLowerCase();
-  // Trier par longueur pour éviter que "plus" mange "plus grand que"
-  Object.keys(cerveauUniversel).sort((a,b)=>b.length-a.length).forEach(son=>{
-    p = p.replaceAll(son, cerveauUniversel[son]);
-  });
-  return p;
+function cerveauQuiEcoute(p){
+  let phrase = p.toLowerCase();
+  for(let son in cerveauUniversel){ phrase = phrase.replaceAll(son.toLowerCase(), cerveauUniversel[son]); }
+  return phrase;
 }
 
-// === AUDIO ===
-let recognition;
-if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+// --- AUDIO QUI NE S'EFFACE PLUS ---
+let recognition; let fullTranscript = ""; let isRecording = false;
+function startAudio(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ alert("Navigateur non compatible"); return; }
   recognition = new SR();
+  recognition.lang = document.getElementById('langue-transcription').value;
   recognition.continuous = true; recognition.interimResults = true;
+  recognition.onresult = (e)=>{
+    let interim = "";
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      let txt = cerveauQuiEcoute(e.results[i][0].transcript);
+      if(e.results[i].isFinal){ fullTranscript += txt + " "; } else { interim = txt; }
+    }
+    document.getElementById("audioBox").innerHTML = fullTranscript + "<span style='color:#888'>"+interim+"</span>";
+    document.getElementById("audioBox").scrollTop = 9999;
+  };
+  recognition.onend = ()=>{ if(isRecording) recognition.start(); };
+  isRecording = true; recognition.start();
 }
-const btnRecord = document.getElementById('btn-record');
-const btnStop = document.getElementById('btn-stop');
-const txt = document.getElementById('texte-transcrit');
+function stopAudio(){ isRecording=false; if(recognition) recognition.stop(); }
+function clearAudio(){ if(confirm("Effacer?")){ fullTranscript=""; document.getElementById("audioBox").innerHTML="La transcription va apparaître ici et RESTER..."; } }
+function sendToExpose(){ document.getElementById("exposeEditeur").innerText += "\n\n"+fullTranscript; alert("Envoyé!"); }
 
-btnRecord.onclick = async () => {
-  let langue = document.getElementById('langue-transcription').value;
-  recognition.lang = langue;
-  recognition.start();
-  document.getElementById('status-audio').innerText = "🎧 J'écoute en " + langue + "...";
-  try{ await navigator.mediaDevices.getUserMedia({audio:true}); }catch(e){}
-};
-btnStop.onclick = () => { recognition.stop(); document.getElementById('status-audio').innerText = "⏹️ Arrêté"; };
-recognition.onresult = (e) => {
-  let transcript = "";
-  for(let i=e.resultIndex; i<e.results.length; i++) transcript += e.results[i][0].transcript;
-  let transforme = cerveauQuiEcoute(transcript);
-  txt.value = transforme;
-  // Copie aussi dans l'exposé
-  document.getElementById('editeur-expose').innerText += "\n" + transforme;
-};
+// --- PARAMETRES ---
+document.getElementById('taille-texte').oninput = (e)=>{ document.getElementById('audioBox').style.fontSize=e.target.value+'px'; document.getElementById('exposeEditeur').style.fontSize=e.target.value+'px'; }
+document.getElementById('couleur-fond').oninput = (e)=>{ document.body.style.backgroundColor=e.target.value; }
+document.getElementById('couleur-corps').oninput = (e)=>{ document.body.style.color=e.target.value; }
+document.getElementById('btn-demander-autorisations').onclick = async ()=>{
+  try{ await navigator.mediaDevices.getUserMedia({audio:true}); document.getElementById('status-autorisation').innerText="✅ Micro OK"; }
+  catch{ document.getElementById('status-autorisation').innerText="❌ Refusé"; }
+}
 
-// === PARAMETRES STYLE ===
-document.getElementById('taille-texte').oninput = (e)=>{ txt.style.fontSize = e.target.value+'px'; document.getElementById('val-taille').innerText = e.target.value+'px'; document.getElementById('editeur-expose').style.fontSize = e.target.value+'px'; }
-document.getElementById('police-texte').onchange = (e)=>{ txt.style.fontFamily = e.target.value; document.getElementById('editeur-expose').style.fontFamily = e.target.value; }
-document.getElementById('couleur-fond').oninput = (e)=>{ document.body.style.backgroundColor = e.target.value; }
-document.getElementById('couleur-corps').oninput = (e)=>{ document.body.style.color = e.target.value; }
-document.getElementById('btn-params').onclick = ()=>{ let m=document.getElementById('menu-params'); m.style.display = m.style.display==='none'?'block':'none'; }
-document.getElementById('btn-demander-autorisations').onclick = async ()=>{ try{ await navigator.mediaDevices.getUserMedia({audio:true}); document.getElementById('status-autorisation').innerText="✅ Micro autorisé!"; }catch(e){ document.getElementById('status-autorisation').innerText="❌ Refusé"; } };
-
-// === PARTAGE ===
-document.getElementById('btn-partager').onclick = async ()=>{
-  let texte = document.getElementById('editeur-expose').innerText + "\n\n" + txt.value;
-  if(navigator.share){ await navigator.share({title:'Mon Exposé V23', text:texte, url:location.href}); document.getElementById('status-partage').innerText="✅ Partagé!"; }
-  else{ navigator.clipboard.writeText(texte); document.getElementById('status-partage').innerText="📋 Copié! Colle sur YouTube, WhatsApp..."; }
-};
-
-// === CHAT ===
-document.getElementById('btn-envoyer').onclick = ()=>{
-  let q = document.getElementById('question').value;
-  let exposé = document.getElementById('editeur-expose').innerText;
-  document.getElementById('messages').innerHTML += `<p><b>Toi:</b> ${q}</p><p><b>IA:</b> Je lis ton exposé [${exposé.substring(0,50)}...] et pour "${q}", voici : C'est ∫ qui représente... Je peux t'expliquer plus si tu veux.</p>`;
-  document.getElementById('question').value="";
-};
+// --- PARTAGE + IA ---
+async function partager(){
+  let texte = document.getElementById('exposeEditeur').innerText + "\n\n" + fullTranscript;
+  if(navigator.share){ await navigator.share({title:'Ahooffice', text:texte}); } else { navigator.clipboard.writeText(texte); alert("Copié!"); }
+}
+function askIA(){
+  let q=document.getElementById('questionIA').value; if(!q) return;
+  document.getElementById('chatBox').innerHTML+=`<div style="margin-top:8px"><b>Toi:</b> ${q}</div>`;
+  document.getElementById('chatBox').innerHTML+=`<div style="margin-top:4px;color:#007aff"><b>IA:</b> Reçu "${q}". J'analyse ton exposé : ${document.getElementById('exposeEditeur').innerText.substring(0,100)}... et ton audio. Je suis prêt à t'aider pour toute l'app.</div>`;
+  document.getElementById('questionIA').value=""; document.getElementById('chatBox').scrollTop=9999;
+}
 </script>
 </body>
 </html>

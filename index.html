@@ -2,92 +2,87 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahooffice V25</title>
+<title>Ahooffice V26 - Icones seulement</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{colors:{primary:'#1377F2',success:'#16C784'}}}}</script>
 <style>body{font-family:Inter}</style>
 </head>
 <body class="bg-[#F4F7FB] p-4 pb-24">
 
-<header class="flex justify-between bg-white p-4 rounded-2xl shadow-sm sticky top-2 z-10">
+<header class="flex justify-between bg-white p-4 rounded-2xl shadow-sm">
 <b class="text-[#1377F2] text-xl">Ahooffice</b>
-<button onclick="showAccueil()" class="text-sm bg-gray-100 px-3 py-1 rounded-full">🏠 Accueil</button>
+<button onclick="showAccueil()" class="text-sm bg-gray-100 px-3 py-1 rounded-full">🏠</button>
 </header>
 
-<!-- CARACTERISTIQUE 1 - ACCUEIL SEUL AU DEBUT -->
+<!-- ACCUEIL = UNIQUEMENT LES ICONES -->
 <section id="accueil">
-<div class="bg-white p-6 rounded-2xl mt-4 shadow-sm">
-<h2 class="text-2xl font-bold">Vos idées prennent vie ici.</h2>
-<p class="text-gray-500 text-sm">Enregistrez, transcrivez, rédigez et partagez.</p>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div onclick="showOutil('audio-transcription')" class="bg-white p-8 rounded-[20px] text-center shadow-sm active:scale-95"><div style="font-size:40px;">🎙️</div><h3 class="font-bold mt-2">Audio</h3></div>
+<div onclick="showOutil('expose-word')" class="bg-white p-8 rounded-[20px] text-center shadow-sm active:scale-95"><div style="font-size:40px;">📊</div><h3 class="font-bold mt-2">Exposé</h3></div>
+<div onclick="showOutil('autres-services')" class="bg-white p-8 rounded-[20px] text-center shadow-sm active:scale-95"><div style="font-size:40px;">📄</div><h3 class="font-bold mt-2">Autres</h3></div>
+<div onclick="showOutil('chat-discussion')" class="bg-white p-8 rounded-[20px] text-center shadow-sm active:scale-95"><div style="font-size:40px;">🧠</div><h3 class="font-bold mt-2">IA</h3></div>
 </div>
-
-<h2 class="font-bold mt-6 mb-2">Nos Services</h2>
-<div class="grid grid-cols-2 gap-3">
-<div class="service-card bg-white p-6 rounded-2xl text-center shadow-sm" onclick="showOutil('audio-transcription')"><span style="font-size:30px;">🎙️</span><h3 class="font-bold mt-1">Audio</h3><p class="text-xs text-gray-400">En premier</p></div>
-<div class="service-card bg-white p-6 rounded-2xl text-center shadow-sm" onclick="showOutil('expose-word')"><span style="font-size:30px;">📊</span><h3 class="font-bold mt-1">Exposé Excel</h3><p class="text-xs text-gray-400">En deuxième</p></div>
-<div class="service-card bg-white p-6 rounded-2xl text-center shadow-sm" onclick="showOutil('autres-services')"><span style="font-size:30px;">📄</span><h3 class="font-bold mt-1">Autres Services</h3></div>
-<div class="service-card bg-white p-6 rounded-2xl text-center shadow-sm" onclick="showOutil('chat-discussion')"><span style="font-size:30px;">🧠</span><h3 class="font-bold mt-1">IA</h3></div>
-</div>
+<p class="text-center text-xs text-gray-400 mt-4">Clique sur une icône</p>
 </section>
 
-<!-- 2. AUDIO - CACHÉ AU DÉBUT -->
+<!-- AUDIO = TOUT CE QUI EST AUDIO EST DEDANS -->
 <section id="audio-transcription" class="hidden bg-white p-5 rounded-2xl mt-4 shadow-sm">
-<button onclick="showAccueil()" class="text-sm mb-3">⬅️ Retour</button>
+<button onclick="showAccueil()" class="text-sm mb-3 bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button>
 <h2 class="font-bold text-lg">🎙️ Audio -> Texte</h2>
-<div class="flex gap-2 mt-3"><button id="btnStart" onclick="startAudio()" class="flex-1 bg-[#ff3b30] text-white py-3 rounded-xl font-bold">🔴 Enregistrer</button><button onclick="stopAudio()" class="bg-black text-white px-5 rounded-xl">⏹️ Stop</button><button onclick="clearAudio()" class="bg-gray-200 px-4 rounded-xl">🗑️</button></div>
-<p class="text-sm mt-3">Voix à garder :</p><select id="voix-filtre" class="w-full p-2 border rounded-xl"><option value="toutes">Toutes les voix</option><option value="voix1">Voix 1 - C'est seulement celle-là</option><option value="voix2">Voix 2</option></select>
-<div id="audioBox" class="mt-3 border-2 border-[#1377F2] min-h-[150px] max-h-[250px] overflow-y-auto p-3 rounded-xl bg-[#f9f9ff]">La transcription va apparaître ici et RESTER...</div>
+<div class="flex gap-2 mt-3"><button onclick="startAudio()" class="flex-1 bg-[#ff3b30] text-white py-3 rounded-xl font-bold">🔴 Enregistrer</button><button onclick="stopAudio()" class="bg-black text-white px-5 rounded-xl">⏹️</button><button onclick="clearAudio()" class="bg-gray-200 px-4 rounded-xl">🗑️</button></div>
+<div class="mt-3"><label class="text-sm">Voix à garder :</label><select id="voix-filtre" class="w-full p-2 border rounded-xl mt-1"><option value="toutes">Toutes les voix</option><option value="voix1">Voix 1 - Seulement celle-là</option><option value="voix2">Voix 2</option></select></div>
+<div id="audioBox" class="mt-3 border-2 border-[#1377F2] min-h-[150px] p-3 rounded-xl bg-[#f9f9ff]">La transcription RESTE ici...</div>
 <button onclick="sendToExpose()" class="mt-3 w-full bg-[#1377F2] text-white py-3 rounded-xl">📤 Envoyer vers Exposé</button>
 
-<!-- V22.4 LANGUES -->
-<div id="menu-params" class="mt-4 border p-3 rounded-xl"><p class="text-sm font-bold">🌍 Langue officielle :</p><select id="langue-transcription" class="w-full p-2 border rounded-lg mt-1 text-sm"><option value="fr-FR">Français</option><option value="en-US">English - USA</option><option value="ln-CD">Lingala - RDC</option><option value="sw-KE">Swahili</option><option value="kg-CD">Kikongo</option><option value="lu-CD">Tshiluba</option><option value="ar-SA">Arabe</option><option value="zh-CN">Chinois</option><option value="pt-BR">Português - Angola</option><option value="de-DE">Allemand</option><option value="es-ES">Español</option><option value="hi-IN">Hindi</option><option value="yo-NG">Yoruba</option><option value="zu-ZA">Zulu</option></select></div>
+<div class="mt-4 border-t pt-3">
+<p class="text-sm font-bold">🌍 Langue officielle :</p>
+<select id="langue-transcription" class="w-full p-2 border rounded-lg mt-1 text-sm">
+<option value="fr-FR">Français</option><option value="en-US">English</option><option value="ln-CD">Lingala</option><option value="sw-KE">Swahili</option><option value="kg-CD">Kikongo</option><option value="lu-CD">Tshiluba</option><option value="ar-SA">Arabe</option><option value="zh-CN">Chinois</option><option value="pt-BR">Português Angola</option><option value="de-DE">Allemand</option><option value="es-ES">Español</option><option value="hi-IN">Hindi</option><option value="yo-NG">Yoruba</option><option value="zu-ZA">Zulu</option>
+</select>
+</div>
 
-<!-- TRADUCTION VOIX -->
-<div class="mt-3 p-3 bg-[#F4F7FB] rounded-xl"><b class="text-sm">🌍 Traduire avec ma voix</b><div class="flex gap-2 mt-2"><select id="langSelectTrad" class="flex-1 p-2 border rounded-lg"><option value="en">Anglais</option><option value="fr">Français</option><option value="ln">Lingala</option></select><button id="translateVoiceBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg">Traduire</button></div><div id="translatedBox" class="hidden mt-2"><p id="translatedText" class="text-sm italic"></p><audio id="translatedAudio" controls class="w-full mt-2"></audio><button onclick="document.getElementById('translatedAudio').play()" class="w-full bg-[#1377F2] text-white py-2 rounded-lg mt-2">🔊 Rejouer</button></div></div>
+<div class="mt-3 p-3 bg-[#F4F7FB] rounded-xl">
+<b class="text-sm">🌍 Traduire + rejouer avec ma voix</b>
+<div class="flex gap-2 mt-2"><select id="langSelectTrad" class="flex-1 p-2 border rounded-lg"><option value="en">Anglais</option><option value="fr">Français</option><option value="ln">Lingala</option></select><button id="translateVoiceBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg">Traduire</button></div>
+<div id="translatedBox" class="hidden mt-2"><p id="translatedText" class="text-sm italic"></p><audio id="translatedAudio" controls class="w-full mt-2"></audio><button onclick="document.getElementById('translatedAudio').play()" class="w-full bg-[#1377F2] text-white py-2 rounded-lg mt-2">🔊 Rejouer</button></div>
+</div>
 </section>
 
-<!-- 3. EXPOSE - CACHÉ AU DÉBUT -->
+<!-- EXPOSE = TOUT CE QUI EST EXPOSE EST DEDANS -->
 <section id="expose-word" class="hidden bg-white p-5 rounded-2xl mt-4 shadow-sm">
-<button onclick="showAccueil()" class="text-sm mb-3">⬅️ Retour</button>
+<button onclick="showAccueil()" class="text-sm mb-3 bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button>
 <h2 class="font-bold text-lg">📊 Exposé</h2>
-<div class="flex gap-2 my-3 text-xs"><button onclick="document.execCommand('bold')" class="px-3 py-1 bg-gray-100 rounded-full"><b>Gras</b></button><button onclick="document.execCommand('italic')" class="px-3 py-1 bg-gray-100 rounded-full"><i>Italique</i></button><button onclick="document.execCommand('justifyCenter')" class="px-3 py-1 bg-gray-100 rounded-full">Centrer</button><button onclick="document.execCommand('insertUnorderedList')" class="px-3 py-1 bg-gray-100 rounded-full">Liste</button></div>
-<div id="editeur-expose" contenteditable="true" class="min-h-[200px] p-3 border rounded-xl"><h3>I. INTRODUCTION</h3><p>Écris ton introduction ici...</p><h3>II. PLAN</h3><p>1.... 2.... 3....</p><h3>III. DÉVELOPPEMENT</h3><p>Écris ton développement ici...</p><h3>IV. CONCLUSION</h3><p>Écris ta conclusion ici...</p></div>
-<div class="flex gap-2 mt-3"><button class="flex-1 bg-[#1377F2] text-white py-2 rounded-xl text-sm">PDF</button><button id="btn-partager" class="flex-1 bg-[#25D366] text-white py-2 rounded-xl text-sm">📤 Partager</button></div><p id="status-partage" class="text-xs mt-1"></p>
+<div class="flex gap-2 my-3 text-xs"><button onclick="document.execCommand('bold')" class="px-3 py-1 bg-gray-100 rounded-full"><b>Gras</b></button><button onclick="document.execCommand('italic')" class="px-3 py-1 bg-gray-100 rounded-full"><i>Italique</i></button><button onclick="document.execCommand('justifyCenter')" class="px-3 py-1 bg-gray-100 rounded-full">Centrer</button></div>
+<div id="editeur-expose" contenteditable="true" class="min-h-[200px] p-3 border rounded-xl"><h3>I. INTRODUCTION</h3><p>Écris ici...</p><h3>II. PLAN</h3><p>1... 2... 3...</p><h3>III. DÉVELOPPEMENT</h3><p>Écris ici...</p><h3>IV. CONCLUSION</h3><p>Écris ici...</p></div>
+<div class="flex gap-2 mt-3"><button class="flex-1 bg-[#1377F2] text-white py-2 rounded-xl">PDF</button><button id="btn-partager" class="flex-1 bg-[#25D366] text-white py-2 rounded-xl">📤 Partager</button></div>
+<p id="status-partage" class="text-xs mt-1"></p>
 </section>
 
-<!-- AUTRES SERVICES + PARAMETRES -->
+<!-- AUTRES SERVICES = PARAMETRES + COULEURS + AUTORISATIONS DEDANS -->
 <section id="autres-services" class="hidden bg-white p-5 rounded-2xl mt-4 shadow-sm">
-<button onclick="showAccueil()" class="text-sm mb-3">⬅️ Retour</button>
-<h3 class="font-bold">⚙️ Paramètres + Couleurs</h3>
-<div class="grid grid-cols-2 gap-3 mt-3 text-xs"><label>Taille <input type="range" id="taille-texte" min="12" max="32" value="16" class="w-full"></label><label>Fond <input type="color" id="couleur-fond" value="#F4F7FB"></label></div>
-<button id="btn-demander-autorisations" class="mt-3 w-full bg-[#1377F2] text-white py-2 rounded-xl text-sm">Demander autorisations Micro</button><p id="status-autorisation" class="text-xs text-green-600"></p>
+<button onclick="showAccueil()" class="text-sm mb-3 bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button>
+<h3 class="font-bold">📄 Autres Services</h3>
+<div class="mt-4 p-3 bg-[#F4F7FB] rounded-xl"><h4 class="font-bold text-sm">⚙️ Paramètres</h4><div class="grid grid-cols-2 gap-3 mt-2 text-xs"><label>Taille <input type="range" id="taille-texte" min="12" max="32" value="16" class="w-full"></label><label>Fond <input type="color" id="couleur-fond" value="#F4F7FB"></label></div><button id="btn-demander-autorisations" class="mt-3 w-full bg-[#1377F2] text-white py-2 rounded-xl text-sm">Demander autorisations Micro</button><p id="status-autorisation" class="text-xs text-green-600"></p></div>
 </section>
 
-<!-- 7. IA - CACHÉ AU DÉBUT -->
+<!-- IA = TOUT CE QUI EST IA DEDANS -->
 <section id="chat-discussion" class="hidden bg-white p-5 rounded-2xl mt-4 shadow-sm">
-<button onclick="showAccueil()" class="text-sm mb-3">⬅️ Retour</button>
-<h3 class="font-bold">💬 Assistant Général</h3>
+<button onclick="showAccueil()" class="text-sm mb-3 bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button>
+<h3 class="font-bold">💬 Assistant IA</h3>
 <div id="messages" class="h-[200px] overflow-y-auto bg-[#F4F7FB] rounded-xl p-3 mt-3 text-sm"><p><b>IA:</b> Salut Roberto!</p></div>
-<div class="flex gap-2 mt-3"><input id="question" class="flex-1 p-3 border rounded-xl text-sm" placeholder="Explique-moi..."><button id="btn-envoyer" class="bg-[#1377F2] text-white px-5 rounded-xl">Envoyer</button></div>
+<div class="flex gap-2 mt-3"><input id="question" class="flex-1 p-3 border rounded-xl text-sm" placeholder="Pose ta question..."><button id="btn-envoyer" class="bg-[#1377F2] text-white px-5 rounded-xl">Envoyer</button></div>
 </section>
 
 <script>
-// CERVEAU UNIVERSEL COMPLET
-const cerveauUniversel={"plus":"+","addition":"+","moins":"-","fois":"×","multiplié par":"×","divisé par":"÷","égal":"=","différent de":"≠","environ":"≈","plus grand que":">","plus petit que":"<","supérieur ou égal":"≥","inférieur ou égal":"≤","pour cent":"%","au carré":"²","au cube":"³","racine carrée":"√","infini":"∞","intégrale":"∫","double intégrale":"∬","somme":"Σ","produit":"Π","limite":"lim","tend vers":"→","sinus":"sin","cosinus":"cos","tangente":"tan","pour tout":"∀","il existe":"∃","appartient à":"∈","union":"∪","intersection":"∩","implique":"⇒","alpha":"α","beta":"β","gamma":"γ","delta":"δ","pi":"π","sigma":"σ","oméga":"ω","ohm":"Ω","H2O":"H₂O","CO2":"CO₂","flèche":"→","H2SO4":"H₂SO₄","O2":"O₂"};
+const cerveauUniversel={"plus":"+","fois":"×","divisé par":"÷","égal":"=","au carré":"²","racine carrée":"√","intégrale":"∫","somme":"Σ","alpha":"α","beta":"β","gamma":"γ","pi":"π","oméga":"ω","ohm":"Ω","H2O":"H₂O","CO2":"CO₂","flèche":"→"};
 function cerveauQuiEcoute(p){let ph=p.toLowerCase();for(let s in cerveauUniversel)ph=ph.replaceAll(s.toLowerCase(),cerveauUniversel[s]);return ph;}
-
-// LOGIQUE CACHE / MONTRE
 function showOutil(id){document.getElementById('accueil').classList.add('hidden');document.getElementById('audio-transcription').classList.add('hidden');document.getElementById('expose-word').classList.add('hidden');document.getElementById('autres-services').classList.add('hidden');document.getElementById('chat-discussion').classList.add('hidden');document.getElementById(id).classList.remove('hidden');}
-function showAccueil(){document.getElementById('accueil').classList.remove('hidden');document.getElementById('audio-transcription').classList.add('hidden');document.getElementById('expose-word').classList.add('hidden');document.getElementById('autres-services').classList.add('hidden');document.getElementById('chat-discussion').classList.add('hidden');window.scrollTo(0,0);}
-
+function showAccueil(){document.getElementById('accueil').classList.remove('hidden');document.getElementById('audio-transcription').classList.add('hidden');document.getElementById('expose-word').classList.add('hidden');document.getElementById('autres-services').classList.add('hidden');document.getElementById('chat-discussion').classList.add('hidden');}
 let recognition,fullTranscript="",isRecording=false;
-function startAudio(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Navigateur non supporté");return;}recognition=new SR();recognition.lang=document.getElementById('langue-transcription').value||'fr-FR';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){let txt=cerveauQuiEcoute(e.results[i][0].transcript);if(e.results[i].isFinal)fullTranscript+=txt+" ";else interim=txt;}document.getElementById('audioBox').innerHTML=fullTranscript+"<span style='color:#888'>"+interim+"</span>";};recognition.onend=()=>{if(isRecording)recognition.start();};isRecording=true;recognition.start();}
+function startAudio(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.lang=document.getElementById('langue-transcription').value||'fr-FR';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){let txt=cerveauQuiEcoute(e.results[i][0].transcript);if(e.results[i].isFinal)fullTranscript+=txt+" ";else interim=txt;}document.getElementById('audioBox').innerHTML=fullTranscript+"<span style='color:#888'>"+interim+"</span>";};recognition.onend=()=>{if(isRecording)recognition.start();};isRecording=true;recognition.start();}
 function stopAudio(){isRecording=false;if(recognition)recognition.stop();}
-function clearAudio(){if(confirm("Effacer?")){fullTranscript="";document.getElementById('audioBox').innerHTML="La transcription va apparaître ici et RESTER...";}}
+function clearAudio(){if(confirm("Effacer?")){fullTranscript="";document.getElementById('audioBox').innerHTML="La transcription RESTE ici...";}}
 function sendToExpose(){document.getElementById('editeur-expose').innerHTML+="<br><br>"+fullTranscript;showOutil('expose-word');}
-document.getElementById('btn-partager').onclick=async()=>{let t=document.getElementById('editeur-expose').innerText;if(navigator.share){await navigator.share({title:'Ahooffice',text:t});}else{navigator.clipboard.writeText(t);document.getElementById('status-partage').innerText="📋 Copié!";}};
-document.getElementById('btn-envoyer').onclick=()=>{let q=document.getElementById('question').value;if(!q)return;let m=document.getElementById('messages');m.innerHTML+=`<p><b>Toi:</b> ${q}</p>`;let r=cerveauQuiEcoute(q);m.innerHTML+=`<p style="color:#1377F2"><b>IA:</b> ${r}</p>`;document.getElementById('question').value="";};
 </script>
 </body>
 </html>

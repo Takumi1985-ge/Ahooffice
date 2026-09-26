@@ -2,119 +2,71 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1985-GE - Ahooffice</title>
+<title>Ahooffice V32</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:Inter}</style>
+<style>body{font-family:Inter,sans-serif}</style>
 </head>
-<body class="bg-[#F5F7FB] pb-24">
-
-<!-- 1. EN HAUT LOGO GAUCHE + MENU DROITE -->
-<header class="bg-[#0F2040] text-white px-4 py-3 flex justify-between items-center sticky top-0 z-30">
-<div class="flex items-center gap-2"><span class="text-xl">🎓</span><div><b>1985-GE</b><p class="text-[9px] opacity-60 -mt-1">Apprendre • Créer • Réussir</p></div></div>
-<div class="flex gap-2 text-[11px]"><button onclick="showAccueil()" class="bg-[#1E3A6A] px-3 py-1.5 rounded-full">🏠 Accueil</button><button onclick="showOutil('parametres-page')" class="bg-[#1E3A6A] w-8 h-8 rounded-full">☰</button></div>
+<body class="bg-[#F4F7FB] pb-20">
+<header class="flex justify-between items-center bg-white p-4 shadow-sm sticky top-0 z-30">
+<b class="text-[#1377F2] text-xl">Ahooffice</b>
+<button onclick="showOutil('parametres-page')" class="bg-gray-100 w-9 h-9 rounded-full">☰</button>
 </header>
 
+<!-- 1 - ACCUEIL UNIQUEMENT ICONES -->
 <section id="accueil">
-
-<!-- 2. TITRE ACCROCHEUR + PRESENTATION + BOUTON -->
-<div class="bg-gradient-to-br from-[#2B6BFF] to-[#0F3BBF] m-3 rounded-[20px] p-6 text-white">
-<p>👋 Bonjour!</p>
-<h1 class="text-[24px] font-extrabold leading-7 mt-1">Votre assistant intelligent pour <span class="text-[#7CFFCB]">apprendre et réussir!</span></h1>
-<p class="text-[12px] opacity-80 mt-2">Transcrivez vos audios, rédigez vos exposés, posez vos questions et bien plus encore... Tout cela, dans un seul endroit!</p>
-<button onclick="document.getElementById('services-illustration').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-white text-[#0F3BBF] text-xs font-bold px-5 py-3 rounded-full">Commencer maintenant →</button>
-</div>
-
-<!-- 3. ILLUSTRATION SERVICES -->
-<div id="services-illustration" class="px-3">
-<h2 class="font-extrabold flex gap-2"><span>⊞</span> Nos Services</h2>
-<p class="text-[11px] text-gray-500 mb-3">Choisissez ce que vous voulez faire et lancez-vous!</p>
-<div class="grid grid-cols-2 gap-3">
-<div onclick="showOutil('audio-transcription')" class="bg-[#EAF2FF] p-4 rounded-[16px]"><div class="bg-[#2B6BFF] w-10 h-10 rounded-xl flex items-center justify-center">🎙️</div><h3 class="font-bold text-[13px] mt-2">Audio → Texte</h3><p class="text-[10px] text-gray-600">Enregistrez ou importez un audio et obtenez sa transcription.</p><button class="mt-3 bg-[#2B6BFF] text-white text-[11px] px-4 py-2 rounded-full">Accéder ›</button></div>
-<div onclick="showOutil('expose-word')" class="bg-[#E6FFF2] p-4 rounded-[16px]"><div class="bg-[#16C784] w-10 h-10 rounded-xl flex items-center justify-center">📝</div><h3 class="font-bold text-[13px] mt-2">Exposé - Comme Word</h3><p class="text-[10px] text-gray-600">Rédigez avec une interface simple et intuitive.</p><button class="mt-3 bg-[#16C784] text-white text-[11px] px-4 py-2 rounded-full">Accéder ›</button></div>
-<div onclick="showOutil('chat-discussion')" class="bg-[#F3E8FF] p-4 rounded-[16px]"><div class="bg-[#8B5CF6] w-10 h-10 rounded-xl flex items-center justify-center">🤖</div><h3 class="font-bold text-[13px] mt-2">Assistant Général</h3><p class="text-[10px] text-gray-600">Posez toutes vos questions, réponses claires et rapides.</p><button class="mt-3 bg-[#8B5CF6] text-white text-[11px] px-4 py-2 rounded-full">Accéder ›</button></div>
-<div onclick="showOutil('autres-services')" class="bg-[#FFF4E0] p-4 rounded-[16px]"><div class="bg-[#FF8C00] w-10 h-10 rounded-xl flex items-center justify-center">📁</div><h3 class="font-bold text-[13px] mt-2">Mes Fichiers</h3><p class="text-[10px] text-gray-600">Accédez à vos documents et gérez vos travaux.</p><button class="mt-3 bg-[#FF8C00] text-white text-[11px] px-4 py-2 rounded-full">Accéder ›</button></div>
-</div>
-</div>
-
-<!-- 4. AVANTAGES -->
-<div class="bg-[#EEF2FF] m-3 mt-5 p-4 rounded-[16px] flex gap-3">
-<div class="bg-white w-8 h-8 rounded-full flex items-center justify-center">🎯</div>
-<div><h4 class="font-bold text-[13px]">Atteignez vos objectifs</h4><p class="text-[10px] text-gray-600">Que ce soit pour l'école, le travail ou vos projets, 1985-GE vous accompagne.</p><div class="flex gap-2 mt-2 text-[10px]"><span>✅ Rapide</span><span>✅ Simple</span><span>✅ Partout</span></div></div>
-<div class="text-2xl">📚</div>
+<div class="bg-white m-3 p-6 rounded-[24px]"><h1 class="font-black text-2xl">Vos idées prennent vie <span class="text-[#1377F2]">ici.</span></h1><p class="text-xs text-gray-500 mt-2">Enregistrez, transcrivez, rédigez</p><button onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-[#1377F2] text-white w-full py-3 rounded-xl text-sm font-bold">Commencer maintenant →</button></div>
+<div id="services" class="grid grid-cols-2 gap-3 p-3">
+<div onclick="showOutil('audio-transcription')" class="bg-white p-6 rounded-2xl text-center"><div class="text-3xl">🎙️</div><h3 class="font-bold text-sm">Audio</h3></div>
+<div onclick="showOutil('expose-word')" class="bg-white p-6 rounded-2xl text-center"><div class="text-3xl">📊</div><h3 class="font-bold text-sm">Exposé Excel</h3></div>
+<div onclick="showOutil('autres-services')" class="bg-white p-6 rounded-2xl text-center"><div class="text-3xl">📄</div><h3 class="font-bold text-sm">Autres Services</h3></div>
+<div onclick="showOutil('chat-discussion')" class="bg-white p-6 rounded-2xl text-center"><div class="text-3xl">🧠</div><h3 class="font-bold text-sm">Assistant IA</h3></div>
 </div>
 </section>
 
-<!-- PAGES DEDANS - AUDIO -->
+<!-- 2 - AUDIO FILTRE VOIX + NE S'EFFACE PLUS -->
 <section id="audio-transcription" class="hidden bg-white p-5 rounded-2xl m-3">
-<button onclick="showAccueil()" class="mb-3 bg-gray-100 px-3 py-1 rounded-full text-xs">⬅️ Retour</button>
-<h2 class="font-bold">🎙️ Audio → Texte</h2>
+<button onclick="showAccueil()" class="text-xs bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button>
+<h2 class="font-bold mt-2">🎙️ Audio -> Texte</h2>
 <div class="flex gap-2 mt-3"><button onclick="startAudio()" class="flex-1 bg-[#ff3b30] text-white py-3 rounded-xl font-bold">🔴 Enregistrer</button><button onclick="stopAudio()" class="bg-black text-white px-5 rounded-xl">⏹️</button><button onclick="clearAudio()" class="bg-gray-200 px-4 rounded-xl">🗑️</button></div>
-<div id="audioBox" class="mt-3 border-2 border-[#2B6BFF] min-h-[120px] p-3 rounded-xl text-sm bg-[#f9f9ff]">La transcription RESTE ici et ne s'efface jamais...</div>
-<button onclick="sendToExpose()" class="mt-3 w-full bg-[#2B6BFF] text-white py-3 rounded-xl text-xs font-bold">📤 Envoyer vers Word</button>
-<select id="langue-transcription" class="w-full mt-3 p-2 border rounded-xl text-xs"><option value="fr-FR">Français</option><option value="en-US">English</option><option value="ln-CD">Lingala</option><option value="sw-KE">Swahili</option><option value="kg-CD">Kikongo</option><option value="ar-SA">Arabe</option><option value="zh-CN">Chinois</option><option value="pt-BR">Português Angola</option></select>
+<p class="text-xs mt-3 font-bold">Voix à garder :</p>
+<select id="voix-filtre" class="w-full p-2 border rounded-xl text-sm"><option value="toutes">Toutes les voix</option><option value="voix1">Voix 1 - Seulement celle-là</option><option value="voix2">Voix 2</option></select>
+<div id="audioBox" class="mt-3 border-2 border-[#1377F2] min-h-[150px] p-3 rounded-xl bg-[#f9f9ff] text-sm">La transcription RESTE ici...</div>
+<button onclick="sendToExpose()" class="mt-3 w-full bg-[#1377F2] text-white py-3 rounded-xl text-xs">📤 Envoyer vers Exposé</button>
+<select id="langue-transcription" class="w-full mt-3 p-2 border rounded-xl text-xs"><option value="fr-FR">Français</option><option value="en-US">English</option><option value="ln-CD">Lingala</option><option value="sw-KE">Swahili</option><option value="ar-SA">Arabe</option><option value="zh-CN">Chinois</option><option value="pt-BR">Português Angola</option></select>
 </section>
 
-<!-- EXPOSE WORD PC + IA THEME -->
+<!-- 3 - EXPOSE COMME WORD -->
 <section id="expose-word" class="hidden bg-white rounded-2xl m-3 overflow-hidden">
-<div class="bg-[#2B579A] text-white p-3 flex justify-between"><button onclick="showAccueil()" class="bg-white/20 w-8 h-8 rounded-full text-xs">⬅️</button><span class="font-bold text-sm">Word - Ahooffice</span><span class="text-[10px] bg-white/20 px-2 py-1 rounded">AutoSave</span></div>
-<div class="bg-[#F3F3F3] p-2 flex gap-1 text-xs border-b"><button onclick="document.execCommand('bold')" class="w-8 h-8 bg-white border rounded font-bold">B</button><button onclick="document.execCommand('italic')" class="w-8 h-8 bg-white border rounded italic">I</button><button onclick="document.execCommand('underline')" class="w-8 h-8 bg-white border rounded underline">U</button><button onclick="document.execCommand('insertUnorderedList')" class="w-8 h-8 bg-white border rounded">•</button></div>
-<div class="bg-[#FFF4CE] p-3 m-3 rounded-xl"><h3 class="font-bold text-xs">🤖 Quel est ton thème?</h3><div class="flex gap-2 mt-2"><input id="theme-expose" class="flex-1 p-3 border rounded-xl text-xs" placeholder="Ex: Le condensateur"><button onclick="genererExposeIA()" class="bg-[#2B579A] text-white px-4 rounded-xl text-xs font-bold">Générer ✨</button></div><div id="propositions-plan" class="hidden mt-2 bg-white p-2 rounded-lg text-xs border"></div></div>
-<div id="editeur-expose" contenteditable="true" class="min-h-[400px] p-6 m-3 border shadow-sm text-[13px]"><p style="text-align:center; font-weight:bold;">Titre</p><br><b>I. INTRODUCTION</b><p>...</p><br><b>II. PLAN</b><p>1..2..3..</p><br><b>III. DÉVELOPPEMENT</b><p>...</p><br><b>IV. CONCLUSION</b><p>...</p></div>
-<div class="p-3 flex gap-2"><button onclick="window.print()" class="flex-1 bg-[#2B579A] text-white py-2 rounded-xl text-xs">PDF</button><button id="btn-partager" class="flex-1 bg-[#25D366] text-white py-2 rounded-xl text-xs">📤 Partager</button></div>
+<div class="bg-[#2B579A] text-white p-3 flex justify-between"><button onclick="showAccueil()" class="bg-white/20 w-8 h-8 rounded-full">⬅️</button><b class="text-sm">Word</b><span class="text-[10px]">AutoSave</span></div>
+<div class="bg-[#F3F3F3] p-2 flex gap-1 border-b"><button onclick="document.execCommand('bold')" class="w-8 h-8 bg-white border rounded font-bold">B</button><button onclick="document.execCommand('italic')" class="w-8 h-8 bg-white border rounded">I</button><button onclick="document.execCommand('justifyCenter')" class="w-8 h-8 bg-white border rounded">≡</button><button onclick="document.execCommand('insertUnorderedList')" class="w-8 h-8 bg-white border rounded">•</button></div>
+<div class="bg-[#FFF4CE] p-3 m-3 rounded-xl"><div class="flex gap-2"><input id="theme-expose" class="flex-1 p-3 border rounded-xl text-xs" placeholder="Thème exposé"><button onclick="genererExposeIA()" class="bg-[#2B579A] text-white px-4 rounded-xl text-xs">Générer ✨</button></div><div id="propositions-plan" class="hidden mt-2 bg-white p-2 rounded text-xs border"></div></div>
+<div id="editeur-expose" contenteditable="true" class="min-h-[400px] p-6 m-3 border text-[13px]"><h3>I. INTRODUCTION</h3><p>Écris...</p><h3>II. PLAN</h3><p>1..2..3..</p><h3>III. DÉVELOPPEMENT</h3><p>Écris...</p><h3>IV. CONCLUSION</h3><p>Écris...</p></div>
+<div class="p-3 flex gap-2"><button onclick="window.print()" class="flex-1 bg-[#2B579A] text-white py-2 rounded-xl text-xs">PDF</button><button id="btn-partager" class="flex-1 bg-[#25D366] text-white py-2 rounded-xl text-xs">Partager</button></div>
 </section>
 
-<!-- ASSISTANT GENERAL QUI INTERAGIT VRAIMENT BIEN -->
-<section id="chat-discussion" class="hidden bg-white rounded-2xl m-3 overflow-hidden flex flex-col" style="height:80vh;">
-<div class="bg-[#8B5CF6] text-white p-4 flex justify-between"><button onclick="showAccueil()" class="bg-white/20 w-8 h-8 rounded-full">⬅️</button><div><p class="font-bold text-sm">Assistant Général</p><p class="text-[10px] opacity-80">En ligne • Cerveau Universel α Σ ∫</p></div><span>🧠</span></div>
-<div id="messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F5F7FB] text-[13px]">
-<div class="bg-white p-3 rounded-2xl shadow-sm w-[85%]">Salut! 👋 Je suis ton assistant pour <b>toute l'app</b>. Je peux expliquer C=Q/U, traduire alpha → α, générer ton exposé. Que veux-tu faire?</div>
-<div class="flex gap-2 flex-wrap"><button onclick="quickAsk('Explique C=Q/U')" class="bg-white text-[11px] px-3 py-1 rounded-full border">C=Q/U</button><button onclick="quickAsk('Fais mon exposé sur la photosynthèse')" class="bg-white text-[11px] px-3 py-1 rounded-full border">Fais mon exposé</button></div>
-</div>
-<div class="p-3 bg-white border-t flex gap-2"><input id="question" class="flex-1 p-3 bg-[#F5F7FB] rounded-full text-sm outline-none" placeholder="Écris..."><button onclick="envoyerIA()" class="bg-[#8B5CF6] text-white w-10 h-10 rounded-full">➤</button></div>
-</section>
+<section id="autres-services" class="hidden bg-white p-5 rounded-2xl m-3"><button onclick="showAccueil()" class="text-xs bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button><h3 class="font-bold mt-2">📁 Mes Fichiers</h3><div id="library" class="text-xs text-gray-400 mt-2">Bibliothèque</div></section>
 
-<section id="autres-services" class="hidden bg-white p-5 rounded-2xl m-3"><button onclick="showAccueil()" class="mb-3 bg-gray-100 px-3 py-1 rounded-full text-xs">⬅️ Retour</button><h3 class="font-bold">📁 Mes Fichiers</h3><div id="library" class="text-xs text-gray-400 mt-2">Tes fichiers ici.</div></section>
-<section id="parametres-page" class="hidden bg-white p-5 rounded-2xl m-3"><button onclick="showAccueil()" class="mb-3 bg-gray-100 px-3 py-1 rounded-full text-xs">⬅️ Retour</button><h3 class="font-bold">⚙️ Profil</h3><button id="btn-demander-autorisations" class="mt-3 w-full bg-[#0F2040] text-white py-3 rounded-xl text-xs">🎤 Autoriser Micro</button><p id="status-autorisation" class="text-xs mt-2"></p></section>
+<section id="chat-discussion" class="hidden bg-white rounded-2xl m-3 overflow-hidden" style="height:80vh; display:flex; flex-direction:column"><div class="bg-[#1377F2] text-white p-3 flex justify-between"><button onclick="showAccueil()" class="bg-white/20 w-8 h-8 rounded-full">⬅️</button><b class="text-sm">Assistant Général</b></div><div id="messages" class="flex-1 overflow-y-auto p-3 bg-[#F4F7FB] text-sm space-y-2"><div class="bg-white p-2 rounded-lg w-fit">Salut! Assistant pour toute l'app</div></div><div class="p-3 flex gap-2 border-t"><input id="question" class="flex-1 p-3 bg-[#F4F7FB] rounded-full text-sm outline-none" placeholder="Question..."><button id="btn-envoyer" class="bg-[#1377F2] text-white w-10 h-10 rounded-full">➤</button></div></section>
 
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2 text-[10px]">
-<button onclick="showAccueil()" class="flex flex-col items-center text-[#2B6BFF]"><span>🏠</span>Accueil</button>
-<button onclick="showOutil('audio-transcription')" class="flex flex-col items-center text-gray-400"><span>🎙️</span>Audio</button>
-<button onclick="showOutil('expose-word')" class="flex flex-col items-center text-gray-400"><span>📊</span>Exposé</button>
-<button onclick="showOutil('chat-discussion')" class="flex flex-col items-center text-gray-400"><span>🧠</span>IA</button>
-</nav>
+<section id="parametres-page" class="hidden bg-white p-5 rounded-2xl m-3"><button onclick="showAccueil()" class="text-xs bg-gray-100 px-3 py-1 rounded-full">⬅️ Retour</button><h3 class="font-bold mt-2">⚙️ Paramètres</h3><div class="mt-3 p-3 bg-[#F4F7FB] rounded-xl text-xs"><label>Taille <input type="range" id="taille-texte" min="12" max="32" value="16" class="w-full"></label><label class="mt-2 block">Fond <input type="color" id="couleur-fond" value="#F4F7FB"></label><button id="btn-demander-autorisations" class="mt-3 w-full bg-[#1377F2] text-white py-2 rounded-xl">Autoriser Micro</button><p id="status-autorisation" class="text-green-600 mt-1"></p></div></section>
 
 <script>
-const cerveauUniversel={"plus":"+","addition":"+","fois":"×","multiplié par":"×","divisé par":"÷","égal":"=","au carré":"²","racine carrée":"√","intégrale":"∫","somme":"Σ","produit":"Π","alpha":"α","beta":"β","gamma":"γ","delta":"δ","pi":"π","oméga":"ω","ohm":"Ω","H2O":"H₂O","CO2":"CO₂","flèche":"→","pour tout":"∀","il existe":"∃","H2SO4":"H₂SO₄","O2":"O₂"};
+const cerveauUniversel={"plus":"+","fois":"×","divisé par":"÷","égal":"=","au carré":"²","racine carrée":"√","intégrale":"∫","double intégrale":"∬","somme":"Σ","alpha":"α","beta":"β","gamma":"γ","pi":"π","oméga":"ω","ohm":"Ω","H2O":"H₂O","CO2":"CO₂","flèche":"→","pour tout":"∀","il existe":"∃","H2SO4":"H₂SO₄","E=m×c²":"E=m×c²","supérieur ou égal":"≥","inférieur ou égal":"≤","environ":"≈"};
 function cerveauQuiEcoute(p){let ph=p.toLowerCase();for(let s in cerveauUniversel)ph=ph.replaceAll(s.toLowerCase(),cerveauUniversel[s]);return ph;}
 function showOutil(id){['accueil','audio-transcription','expose-word','autres-services','chat-discussion','parametres-page'].forEach(e=>document.getElementById(e).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
 function showAccueil(){['audio-transcription','expose-word','autres-services','chat-discussion','parametres-page'].forEach(e=>document.getElementById(e).classList.add('hidden'));document.getElementById('accueil').classList.remove('hidden');}
 let recognition,fullTranscript="",isRecording=false;
-function startAudio(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return alert("Non supporté");recognition=new SR();recognition.lang=document.getElementById('langue-transcription').value||'fr-FR';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){let txt=cerveauQuiEcoute(e.results[i][0].transcript);if(e.results[i].isFinal)fullTranscript+=txt+" ";else interim=txt;}document.getElementById('audioBox').innerHTML=fullTranscript+"<span style='color:#888'>"+interim+"</span>";};recognition.onend=()=>{if(isRecording)recognition.start();};isRecording=true;recognition.start();}
+function startAudio(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.lang=document.getElementById('langue-transcription').value||'fr-FR';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){let txt=cerveauQuiEcoute(e.results[i][0].transcript);if(e.results[i].isFinal)fullTranscript+=txt+" ";else interim=txt;}document.getElementById('audioBox').innerHTML=fullTranscript+"<span style='color:#888'>"+interim+"</span>";};recognition.onend=()=>{if(isRecording)recognition.start();};isRecording=true;recognition.start();}
 function stopAudio(){isRecording=false;if(recognition)recognition.stop();}
 function clearAudio(){if(confirm("Effacer?")){fullTranscript="";document.getElementById('audioBox').innerHTML="La transcription RESTE ici...";}}
 function sendToExpose(){document.getElementById('editeur-expose').innerHTML+="<br><br>"+fullTranscript;showOutil('expose-word');}
-function genererExposeIA(){let t=document.getElementById('theme-expose').value;if(!t)return alert("Thème?");let b=document.getElementById('propositions-plan');b.classList.remove('hidden');b.innerHTML=`Plan pour <b>${t}</b><br>1.Historique 2.Fonctionnement 3.Types 4.Applications<br><button onclick="insererPlan()" class="mt-2 bg-[#2B579A] text-white px-4 py-2 rounded-lg w-full">📝 Insérer dans Word</button>`;window.themeActuel=t;}
-function insererPlan(){let th=window.themeActuel;document.getElementById('editeur-expose').innerHTML=`<p style="text-align:center; font-weight:bold; font-size:18px;">${th.toUpperCase()}</p><br><b>I. INTRODUCTION</b><p>${th} est important...</p><br><b>II. PLAN</b><p>1.Définition 2.Fonctionnement 3.Types 4.Applications</p><br><b>III. DÉVELOPPEMENT</b><p>A. ${th} désigne... B. Fonctionnement: C=Q/U, α, Ω, H₂O<br>C. Applications quotidiennes...</p><br><b>IV. CONCLUSION</b><p>En conclusion...</p>`;}
-function quickAsk(txt){document.getElementById('question').value=txt;envoyerIA();}
-function envoyerIA(){
-let q=document.getElementById('question').value;if(!q)return;
-let m=document.getElementById('messages');
-m.innerHTML+=`<div class="bg-[#2B6BFF] text-white p-3 rounded-2xl ml-auto w-fit max-w-[80%]">${q}</div>`;
-document.getElementById('question').value="";
-m.innerHTML+=`<div id="typing" class="bg-white p-2 rounded-xl w-fit text-xs text-gray-400">En train d'écrire...</div>`;
-m.scrollTop=m.scrollHeight;
-setTimeout(()=>{
-document.getElementById('typing').remove();
-let r=cerveauQuiEcoute(q);
-let rep=q.toLowerCase().includes("exposé")||q.toLowerCase().includes("expose")?`Super pour "${q}"!<br><br><b>I.Intro</b><br><b>II.Plan 4 parties</b><br><b>III.Développement avec ${r}</b><br><br>Je l'insère dans Word?`:`J'ai compris: "${r}". Je peux expliquer, traduire, générer ton exposé.`;
-m.innerHTML+=`<div class="bg-white p-3 rounded-2xl shadow-sm w-[85%]">${rep}<br><br><button onclick="quickAsk('Oui insère dans Word: ${q}')" class="bg-[#2B6BFF] text-white text-[10px] px-3 py-1 rounded-full">Insérer dans Word</button></div>`;
-if(q.toLowerCase().includes("insère dans word")){window.themeActuel=q.replace(/oui insère dans word:/i,"");insererPlan();m.innerHTML+=`<div class="bg-green-100 p-2 rounded-lg text-xs mt-2">✅ Inséré dans Word!</div>`;}
-m.scrollTop=m.scrollHeight;
-},700);
-}
+function genererExposeIA(){let t=document.getElementById('theme-expose').value;if(!t)return alert("Thème?");let b=document.getElementById('propositions-plan');b.classList.remove('hidden');b.innerHTML=`Plan pour <b>${t}</b><br>1.Historique 2.Fonctionnement 3.Types 4.Applications<br><button onclick="insererPlan()" class="mt-2 bg-[#2B579A] text-white px-4 py-2 rounded w-full">Insérer</button>`;window.themeActuel=t;}
+function insererPlan(){let th=window.themeActuel;document.getElementById('editeur-expose').innerHTML=`<p style="text-align:center;font-weight:bold">${th.toUpperCase()}</p><br><b>I. INTRODUCTION</b><p>${th} est important...</p><br><b>II. PLAN</b><p>1..2..3..4..</p><br><b>III. DEVELOPPEMENT</b><p>C=Q/U, α, Ω, H₂O</p><br><b>IV. CONCLUSION</b><p>Conclusion...</p>`;}
+document.getElementById('taille-texte').oninput=e=>{document.getElementById('editeur-expose').style.fontSize=e.target.value+"px";};
+document.getElementById('couleur-fond').oninput=e=>{document.body.style.backgroundColor=e.target.value;};
 document.getElementById('btn-demander-autorisations').onclick=async()=>{try{await navigator.mediaDevices.getUserMedia({audio:true});document.getElementById('status-autorisation').innerText="✅ Micro OK";}catch{document.getElementById('status-autorisation').innerText="❌ Refusé";}};
-document.getElementById('btn-partager').onclick=async()=>{let t=document.getElementById('editeur-expose').innerText;if(navigator.share)await navigator.share({title:'Ahooffice',text:t});else navigator.clipboard.writeText(t);};
+document.getElementById('btn-partager').onclick=async()=>{let t=document.getElementById('editeur-expose').innerText;if(navigator.share)await navigator.share({title:'Ahooffice',text:t});else{navigator.clipboard.writeText(t);}};
+document.getElementById('btn-envoyer').onclick=()=>{let q=document.getElementById('question').value;if(!q)return;let m=document.getElementById('messages');m.innerHTML+=`<div class="bg-[#1377F2] text-white p-2 rounded-lg ml-auto w-fit">${q}</div>`;let r=cerveauQuiEcoute(q);m.innerHTML+=`<div class="bg-white p-2 rounded-lg w-fit">${r}</div>`;document.getElementById('question').value="";m.scrollTop=m.scrollHeight;};
 </script>
 </body>
 </html>
